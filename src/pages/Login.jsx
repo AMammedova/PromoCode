@@ -1,6 +1,6 @@
 import { useState } from "react";
 import frame from "../assets/images/login-frame.png";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 const Login = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -54,13 +54,19 @@ const Login = () => {
                     onChange={handlePassword}
                   />
                   <div
-                    className="absolute -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                    className="absolute -translate-y-1/2 cursor-pointer right-5 top-1/2"
                     onClick={handlePasswordShow}
                   >
                     {show ? (
-                      <EyeIcon className="w-5 stroke-gray-400 hover:stroke-gray-900" />
+                      <HiOutlineEye
+                        size={20}
+                        className=" stroke-gray-400 hover:stroke-gray-900"
+                      />
                     ) : (
-                      <EyeSlashIcon className="w-5 stroke-gray-400 hover:stroke-gray-900" />
+                      <HiOutlineEyeOff
+                        size={20}
+                        className=" stroke-gray-400 hover:stroke-gray-900"
+                      />
                     )}
                   </div>
                 </div>
