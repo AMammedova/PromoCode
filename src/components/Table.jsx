@@ -50,8 +50,8 @@ const TableComponent = ({ headers, variant, setState }) => {
       {variant === 1 ? (
         <Table hoverable={true}>
           <Table.Head className="!px-10 bg-white border-b">
-            {headers.map((header) => (
-              <Table.HeadCell className="text-sm font-semibold">
+            {headers.map((header, id) => (
+              <Table.HeadCell key={id} className="text-sm font-semibold">
                 {header}
               </Table.HeadCell>
             ))}
@@ -66,6 +66,7 @@ const TableComponent = ({ headers, variant, setState }) => {
                   (item, idx) =>
                     idx !== 0 && (
                       <Table.Cell
+                        key={idx}
                         className={` ${
                           item[1] === "USED"
                             ? "text-green-400"

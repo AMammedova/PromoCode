@@ -1,8 +1,8 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import Table from "../../components/Table";
 
 const List = () => {
-  const [source,setSource]=useState('')
+  const [source, setSource] = useState("");
   const headers = [
     "Promocode",
     "merchant",
@@ -23,21 +23,15 @@ const List = () => {
   ];
   return (
     <div>
-      <div className=" w-1/4 flex justify-between items-center gap-2 py-20">
-  <label className="whitespace-nowrap">Sort by Source</label>
-  <select value={source} onChange={(e)=>setSource(e.target.value)}>
-
-<option value="US">Telegram Bot</option>
-
-</select>
-</div>
+      <div className="flex items-center max-w-xs gap-2 py-20 ">
+        <label className="whitespace-nowrap">Sort by Source</label>
+        <select value={source} onChange={(e) => setSource(e.target.value)}>
+          <option value="US">Telegram Bot</option>
+        </select>
+      </div>
       <Table headers={headers} variant={1} />
       <Table headers={headers2} variant={1} />
-   
-      
-      
     </div>
-    
   );
 };
 
