@@ -1,0 +1,9 @@
+.LogoAdmin{
+    width: 40px;
+    height: 40px;
+    background: url('../src/assets/logoadmin.jpg');
+    border-radius: 100px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    }
