@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import Table from "../../components/Table";
+import { useQuery } from "@tanstack/react-query";
+import { Apis } from "../../utils/apis";
+import Loading from "../../components/Loading";
 
 const List = () => {
   const [source, setSource] = useState("");
@@ -12,6 +15,7 @@ const List = () => {
     "source",
     "status",
   ];
+
   const headers2 = [
     "Promocode",
     "merchant",
@@ -21,9 +25,21 @@ const List = () => {
     "source",
     "Export",
   ];
-  return (
+
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ["getAll"],
+    queryFn: Apis.getAll,
+  });
+
+  return isError ? (
+    <div>Error</div>
+  ) : isLoading ? (
     <div>
-      <div className="flex items-center max-w-xs gap-2 py-20 ">
+      <Loading />
+    </div>
+  ) : (
+    <div>
+      <div className="flex items-center max-w-xs gap-2 mb-8 ">
         <label className="whitespace-nowrap">Sort by Source</label>
         <select value={source} onChange={(e) => setSource(e.target.value)}>
           <option value="US">Telegram Bot</option>

@@ -5,7 +5,7 @@ import List from "./pages/Admin/List";
 import Generate from "./pages/Admin/Generate";
 import Merchants from "./pages/Admin/Merchants";
 import Report from "./pages/Admin/Report";
-import MerchantReport from'./pages/Merchant/MerchantReport';
+import MerchantReport from "./pages/Merchant/MerchantReport";
 import MerchantDashboard from "./pages/Merchant/MerchantDashboard";
 import MerchantSearch from "./pages/Merchant/MerchantSearch";
 import { useTranslation } from "react-i18next";
@@ -23,7 +23,7 @@ const App = () => {
         <Route
           path="/dashboard"
           element={
-            <Layout title="Dashboard">
+            <Layout variant={1} title="Dashboard">
               <Dashboard />
             </Layout>
           }
@@ -31,7 +31,7 @@ const App = () => {
         <Route
           path="/dashboard/list"
           element={
-            <Layout title="List">
+            <Layout variant={1} title="List">
               <List />
             </Layout>
           }
@@ -39,7 +39,7 @@ const App = () => {
         <Route
           path="/dashboard/generate"
           element={
-            <Layout title="Generate">
+            <Layout variant={1} title="Generate">
               <Generate />
             </Layout>
           }
@@ -47,7 +47,7 @@ const App = () => {
         <Route
           path="/dashboard/merchants"
           element={
-            <Layout title="Merchants">
+            <Layout variant={1} title="Merchants">
               <Merchants />
             </Layout>
           }
@@ -55,31 +55,31 @@ const App = () => {
         <Route
           path="/dashboard/report"
           element={
-            <Layout title="Report">
+            <Layout variant={1} title="Report">
               <Report />
             </Layout>
           }
         />
-         <Route
+        <Route
           path="/merchant/report"
           element={
-            <Layout variant='2' title="Report">
+            <Layout variant={2} title="Report">
               <MerchantReport />
             </Layout>
           }
         />
-         <Route
-          path="/merchant/dashboard"
+        <Route
+          path="/merchant"
           element={
-            <Layout variant='2' title="Dashboard">
+            <Layout variant={2} title="Dashboard">
               <MerchantDashboard />
             </Layout>
           }
         />
-         <Route
+        <Route
           path="/merchant/search"
           element={
-            <Layout variant='2' title="Search">
+            <Layout variant={2} title="Search">
               <MerchantSearch />
             </Layout>
           }
