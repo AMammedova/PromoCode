@@ -7,3 +7,40 @@
     background-repeat: no-repeat;
     background-size: cover;
     }
+    .Navbar{
+        width: 1525px;
+        padding: 30px 0px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .NavbarTitle{
+        width: 20%;
+        
+        font-style: normal;
+        font-weight: 500;
+        font-size: 22px;
+        line-height: 29px;
+         color: #4B5563E6;
+         
+
+
+    }
+    .NavbarSwitcher{
+        width: 40%;
+       
+    }
+    .NavbarAdminLogo{
+        width: 9%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .NavbarAdminLogo span:first-child{
+        color: #4B5563E6;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 29px;
+    }
+   

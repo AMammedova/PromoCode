@@ -10,10 +10,10 @@ import Layout from "./components/Layout";
 import Login from "./pages/Login";
 
 const App = () => {
-  const { t, i18n } = useTranslation();
+  // const { t, i18n } = useTranslation();
 
-  document.body.dir = i18n.dir();
-  i18n.changeLanguage("ru");
+  // document.body.dir = i18n.dir();
+  // i18n.changeLanguage("en");
   return (
     <div className="min-h-screen font-inter text-gray-900 font-medium flex bg-gray-50">
       <Routes>

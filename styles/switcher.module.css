@@ -1,0 +1,26 @@
+.Switcher{
+    width: 150px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.Switcher span{
+    color: #4B5563E6;
+        
+    font-style: normal;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 45px;
+}
+.Switcher span:hover{
+    cursor: pointer;
+}
+
+.Switcher span:first-child ::after{
+    content: '|';
+    padding-left: 15px;
+}
+.Switcher span:nth-child(2) ::after{
+    content: '|';
+    padding-left: 15px;
+}
