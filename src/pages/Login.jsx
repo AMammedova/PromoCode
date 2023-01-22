@@ -1,13 +1,33 @@
-import { useState } from "react";
+import { useState,useEffect,useContext } from "react";
 import frame from "../assets/images/login-frame.png";
 import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
+import AuthContext from "../api/context/AuthProvider";
 const Login = () => {
+  const {setAuth}=useContext(AuthContext);
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
+  const [succes,setSucces]=useState(false)
+  const [errMsg,setErrMsg]=useState('')
 
-  const handleSubmit = (e) => {
+  useEffect(()=>{
+setErrMsg('')
+  },[password,userName])
+  const handleSubmit =async (e) => {
     e.preventDefault();
+  try{
+    const response=await axios.post('',Json.stringfy({userName,password}),
+    {
+      headers:{'Content-Type':'application/json'},
+      withCredentials:true
+    }
+    );
+    console.log(Json.stringfy(response?.data));
+    console.log(Json.stringfy(response?.data));
+    setSucces(true)
+  }catch(e){
+
+  }
   };
 
   const handleuserName = (e) => setUserName(e.target.value);
