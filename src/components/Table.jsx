@@ -1,7 +1,8 @@
 import React from "react";
 import { Pagination, Table } from "flowbite-react";
 import { HiOutlinePencilSquare, HiOutlineTrash } from "react-icons/hi2";
-const TableComponent = ({ headers, variant }) => {
+const TableComponent = ({ headers, variant, setState }) => {
+  //fetch api
   const obj = [
     {
       id: 1,
@@ -84,8 +85,8 @@ const TableComponent = ({ headers, variant }) => {
       ) : variant === 2 ? (
         <Table hoverable={true}>
           <Table.Head className="!px-10 bg-white border-b">
-            {headers.map((header) => (
-              <Table.HeadCell className="w-2/6 text-sm font-semibold">
+            {headers.map((header, idx) => (
+              <Table.HeadCell key={idx} className="w-2/6 text-sm font-semibold">
                 {header}
               </Table.HeadCell>
             ))}
@@ -104,12 +105,16 @@ const TableComponent = ({ headers, variant }) => {
                 <Table.Cell>{item.desc}</Table.Cell>
                 <Table.Cell>
                   <HiOutlinePencilSquare
+                    onClick={() => setState({ show: true, process: "onEdit" })}
                     className="cursor-pointer hover:stroke-gray-900"
                     size={20}
                   />
                 </Table.Cell>
                 <Table.Cell>
                   <HiOutlineTrash
+                    onClick={() =>
+                      setState({ show: true, process: "onDelete" })
+                    }
                     className="cursor-pointer hover:stroke-gray-900"
                     size={20}
                   />

@@ -9,10 +9,10 @@
   color: #4b5563e6;
 
   font-style: normal;
-  font-weight: 500;
-  font-size: 20px;
+  font-size: 14px;
   line-height: 45px;
 }
 .Switcher p:hover {
   cursor: pointer;
+  scale: 1.25;
 }
