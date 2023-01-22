@@ -24,9 +24,23 @@ setErrMsg('')
     );
     console.log(Json.stringfy(response?.data));
     console.log(Json.stringfy(response?.data));
+    console.log(Json.stringfy(response?.data?.accesToken));
+    console.log(Json.stringfy(response?.data?.roles))
     setSucces(true)
-  }catch(e){
-
+    setAuth({userName,password,roles,accesToken})
+  }catch(err){
+if(!err?.response){
+  setErrMsg('No Server Response')
+}
+else if(err.response?.status===400){
+  setErrMsg('Missing Username or Password');
+}
+else if(err.response?.status===401){
+  setErrMsg('Unauthorized');
+}
+else{
+  setErrMsg('Login Failed')
+}
   }
   };
 

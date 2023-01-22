@@ -5,6 +5,9 @@ import List from "./pages/Admin/List";
 import Generate from "./pages/Admin/Generate";
 import Merchants from "./pages/Admin/Merchants";
 import Report from "./pages/Admin/Report";
+import MerchantReport from'./pages/Merchant/MerchantReport';
+import MerchantDashboard from "./pages/Merchant/MerchantDashboard";
+import MerchantSearch from "./pages/Merchant/MerchantSearch";
 import { useTranslation } from "react-i18next";
 import Layout from "./components/Layout";
 import Login from "./pages/Login";
@@ -54,6 +57,30 @@ const App = () => {
           element={
             <Layout title="Report">
               <Report />
+            </Layout>
+          }
+        />
+         <Route
+          path="/merchant/report"
+          element={
+            <Layout variant='2' title="Report">
+              <MerchantReport />
+            </Layout>
+          }
+        />
+         <Route
+          path="/merchant/dashboard"
+          element={
+            <Layout variant='2' title="Dashboard">
+              <MerchantDashboard />
+            </Layout>
+          }
+        />
+         <Route
+          path="/merchant/search"
+          element={
+            <Layout variant='2' title="Search">
+              <MerchantSearch />
             </Layout>
           }
         />
