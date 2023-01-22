@@ -1,26 +1,18 @@
-.Switcher{
-    width: 150px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.Switcher {
+  width: 150px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
-.Switcher span{
-    color: #4B5563E6;
-        
-    font-style: normal;
-    font-weight: 500;
-    font-size: 22px;
-    line-height: 45px;
-}
-.Switcher span:hover{
-    cursor: pointer;
-}
+.Switcher span,
+.Switcher p {
+  color: #4b5563e6;
 
-.Switcher span:first-child ::after{
-    content: '|';
-    padding-left: 15px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 45px;
 }
-.Switcher span:nth-child(2) ::after{
-    content: '|';
-    padding-left: 15px;
+.Switcher p:hover {
+  cursor: pointer;
 }

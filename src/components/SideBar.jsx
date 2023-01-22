@@ -39,15 +39,15 @@ const SideBar = () => {
     },
   ];
   return (
-    <div className="text-gray-600/90 min-h-screen shadow-sm pl-4 relative bg-white w-72">
+    <div className="relative min-h-screen pl-4 bg-white shadow-sm text-gray-600/90 w-72">
       <div className="flex gap-3 py-7">
-        <div className="flex justify-center items-center">
+        <div className="flex items-center justify-center">
           <img className="w-12" src={logo} alt="" />
         </div>
-        <h1 className="text-lg w-12">MasterCard Dashboard</h1>
+        <h1 className="w-12 text-lg">MasterCard Dashboard</h1>
       </div>
       <div className="h-[1px] absolute left-0 w-full bg-gray-100"></div>
-      <div className="font-montserrat py-4">
+      <div className="py-4 font-montserrat">
         {links.map(({ id, name, icon, link }) => (
           <Link
             key={id}
@@ -62,7 +62,7 @@ const SideBar = () => {
                   : ""
               }`}
             >
-              <div className="flex gap-5 text-xl items-center">
+              <div className="flex items-center gap-5 text-xl">
                 <span className="flex justify-center">
                   <img src={icon} alt={name} />
                 </span>
