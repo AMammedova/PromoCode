@@ -5,6 +5,9 @@
 
 @layer base {
   input:focus {
-    @apply outline-none;
+    @apply outline-none !border-none !ring-0;
+  }
+  input {
+    @apply !border-none;
   }
 }

@@ -8,7 +8,7 @@ const Layout = ({ children, title }) => {
       <SideBar />
       <div className="flex-1 px-8">
         <Header title={title} />
-        {children}
+        <div className="mt-16">{children}</div>
       </div>
     </div>
   );

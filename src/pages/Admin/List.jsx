@@ -13,7 +13,7 @@ const List = () => {
   ];
   return (
     <div>
-      <Table headers={headers} />
+      <Table headers={headers} variant={1} />
     </div>
   );
 };
