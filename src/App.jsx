@@ -15,7 +15,7 @@ const App = () => {
   // document.body.dir = i18n.dir();
   // i18n.changeLanguage("en");
   return (
-    <div className="min-h-screen font-inter text-gray-900 font-medium flex bg-gray-50">
+    <div className="flex min-h-screen font-medium text-gray-900 font-inter bg-gray-50">
       <Routes>
         <Route
           path="/dashboard"
