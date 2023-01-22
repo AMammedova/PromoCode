@@ -9,12 +9,11 @@
   }
   input {
     @apply !border-none;
-
   }
-  select{
-    @apply max-w-sm w-full rounded text-gray-600;
+  select {
+    @apply w-full max-w-sm text-gray-600 rounded;
   }
-  label{
+  label {
     @apply text-gray-600;
   }
 }
