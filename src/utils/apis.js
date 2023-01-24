@@ -1,8 +1,12 @@
 import axios from "axios";
 
+const token = import.meta.env.VITE_TOKEN;
+
 const Promocode = axios.create({
   baseURL: "https://promocodepanelapi.inloya.com/api/Promocode",
   headers: {
+    Authorization: `Bearer ${token}`,
+
     "Content-type": "application/json",
   },
 });
@@ -10,6 +14,8 @@ const Promocode = axios.create({
 const Logins = axios.create({
   baseURL: "https://promocodepanelapi.inloya.com/api/Users",
   headers: {
+    Authorization: `Bearer ${token}`,
+
     "Content-type": "application/json",
   },
 });
@@ -17,6 +23,8 @@ const Logins = axios.create({
 const Merchant = axios.create({
   baseURL: "https://promocodepanelapi.inloya.com/api/Merchant",
   headers: {
+    Authorization: `Bearer ${token}`,
+
     "Content-type": "application/json",
   },
 });
@@ -36,6 +44,7 @@ export const Apis = {
   },
   getAllPromocode: async () => {
     const { data } = await Promocode.get("/All");
+    console.log(data);
     return data;
   },
   addRandom: async () => {
@@ -58,9 +67,8 @@ export const Apis = {
     const { data } = await Logins.post("/Register");
     return data;
   },
-  login: async (login, header) => {
-    console.log(login, header);
-    const res = await Logins.post("/Login", login, { headers: header });
-    return res;
+  login: async (login) => {
+    const { data } = await Logins.post("/Login", login);
+    return data;
   },
 };

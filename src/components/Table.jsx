@@ -1,50 +1,8 @@
 import React from "react";
 import { Pagination, Table } from "flowbite-react";
 import { HiOutlinePencilSquare, HiOutlineTrash } from "react-icons/hi2";
-const TableComponent = ({ headers, variant, setState }) => {
+const TableComponent = ({ headers, variant, setState, data }) => {
   //fetch api
-  const obj = [
-    {
-      id: 1,
-      promocode: "1XKP4A",
-      merchant: "DINEHALL",
-      desc: "Birinci sifarishe 10% endirim",
-      dateStart: "15/01/2023",
-      dateEnd: "25/02/2023",
-      source: "Telegram Bot",
-      status: "USED",
-    },
-    {
-      id: 2,
-      promocode: "1XKP4A",
-      merchant: "DINEHALL",
-      desc: "Birinci sifarishe 10% endirim",
-      dateStart: "15/01/2023",
-      dateEnd: "25/02/2023",
-      source: "Telegram Bot",
-      status: "USED",
-    },
-    {
-      id: 3,
-      promocode: "1XKP4A",
-      merchant: "DINEHALL",
-      desc: "Birinci sifarishe 10% endirim",
-      dateStart: "15/01/2023",
-      dateEnd: "25/02/2023",
-      source: "Telegram Bot",
-      status: "USED",
-    },
-    {
-      id: 4,
-      promocode: "1XKP4A",
-      merchant: "DINEHALL",
-      desc: "Birinci sifarishe 10% endirim",
-      dateStart: "15/01/2023",
-      dateEnd: "25/02/2023",
-      source: "Telegram Bot",
-      status: "UNUSED",
-    },
-  ];
   return (
     <div className="w-full">
       {variant === 1 ? (
@@ -57,30 +15,38 @@ const TableComponent = ({ headers, variant, setState }) => {
             ))}
           </Table.Head>
           <Table.Body className="divide-y">
-            {obj.map((item) => (
-              <Table.Row
-                key={item.id}
-                className="font-normal bg-white dark:border-gray-700 dark:bg-gray-800"
-              >
-                {Object.entries(item).map(
-                  (item, idx) =>
-                    idx !== 0 && (
-                      <Table.Cell
-                        key={idx}
-                        className={` ${
-                          item[1] === "USED"
-                            ? "text-green-400"
-                            : item[0] === "desc"
-                            ? "text-blue-700"
-                            : ""
-                        }`}
-                      >
-                        {item[1]}
-                      </Table.Cell>
-                    )
-                )}
-              </Table.Row>
-            ))}
+            {data?.data.map(
+              ({
+                appUser,
+                name,
+                id,
+                description,
+                startDate,
+                endDate,
+                isUsed,
+                source,
+              }) => (
+                <Table.Row
+                  key={id}
+                  className="font-normal bg-white dark:border-gray-700 dark:bg-gray-800"
+                >
+                  <Table.Cell>{name}</Table.Cell>
+                  <Table.Cell>{appUser}</Table.Cell>
+                  <Table.Cell className="text-blue-700">
+                    {description}
+                  </Table.Cell>
+                  <Table.Cell>{startDate}</Table.Cell>
+                  <Table.Cell>{endDate}</Table.Cell>
+                  <Table.Cell>{source}</Table.Cell>
+                  <Table.Cell
+                    key={id}
+                    className={` ${isUsed && "text-green-400"}`}
+                  >
+                    {isUsed ? "USED" : "UNUSED"}
+                  </Table.Cell>
+                </Table.Row>
+              )
+            )}
           </Table.Body>
         </Table>
       ) : variant === 2 ? (
@@ -99,7 +65,7 @@ const TableComponent = ({ headers, variant, setState }) => {
             </Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
-            {obj.map((item) => (
+            {/* {data.data.map((item) => (
               <Table.Row key={item.id} className="font-normal bg-white">
                 <Table.Cell>{item.id}</Table.Cell>
                 <Table.Cell>{item.merchant}</Table.Cell>
@@ -121,7 +87,7 @@ const TableComponent = ({ headers, variant, setState }) => {
                   />
                 </Table.Cell>
               </Table.Row>
-            ))}
+            ))} */}
           </Table.Body>
         </Table>
       ) : (

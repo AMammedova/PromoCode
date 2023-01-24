@@ -4,33 +4,50 @@ import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 import AuthContext from "../api/context/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { Apis } from "../utils/apis";
-import axios from "axios";
+import jwt_decode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
   const { setAuth } = useContext(AuthContext);
+  const nav = useNavigate();
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
-  const { refetch: login, ...response } = useQuery(
+  const { refetch: login, data } = useQuery(
     ["login"],
-    () => Apis.login(login, header),
-    { enabled: false }
+    () =>
+      Apis.login({
+        userName: userName,
+        password: password,
+      }),
+    {
+      enabled: false,
+    }
   );
   const handleSubmit = async (e) => {
     e.preventDefault();
-    login(
-      { userName: userName, password: password },
-      {
-        Authorization:
-          "Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQXlzZWwiLCJqdGkiOiIyYThmODc5MS00MjAwLTRhZDgtOGY3Ny1jYjMyNWI3MjZjZDQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsIm5iZiI6MTY3NDU1NjU2NiwiZXhwIjoxNjc0NTYyNTY2LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUxMjkiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjcxMjEifQ.ijXbWfBJim8BLSxgkWQZS6nBOK9IMedgvhSBojVWbMohW7gyieNV4yNNY7b4cij5pXQxgqLEZJN0T5_lN-TqfA",
-      }
-    );
-    console.log(response);
+    login();
   };
   const handleuserName = (e) => setUserName(e.target.value);
 
   const handlePassword = (e) => setPassword(e.target.value);
 
   const handlePasswordShow = () => setShow(!show);
+
+  useEffect(() => {
+    if (data) {
+      const token = data.data.token;
+      const decoded = jwt_decode(token);
+      const role = Object.entries(decoded)[2];
+      setAuth({ "user-token": token, role: role[1] });
+      localStorage.clear();
+      localStorage.setItem("user-token", token);
+      localStorage.setItem("role", role[1]);
+      if (role[1] === "Admin") {
+        nav("/dashboard");
+      }
+    }
+  }, [data]);
+
   return (
     <div className="w-full min-h-screen">
       <img

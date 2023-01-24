@@ -26,11 +26,10 @@ const List = () => {
     "Export",
   ];
 
-  const { isError, isLoading } = useQuery({
-    queryKey: ["getAll"],
-    queryFn: Apis.getAll,
-  });
-
+  const { isError, isLoading, data } = useQuery(
+    ["getData"],
+    Apis.getAllPromocode
+  );
   return isError ? (
     <div>Error</div>
   ) : isLoading ? (
@@ -45,8 +44,8 @@ const List = () => {
           <option value="US">Telegram Bot</option>
         </select>
       </div>
-      <Table headers={headers} variant={1} />
-      <Table headers={headers2} variant={1} />
+      <Table headers={headers} data={data} variant={1} />
+      {/* <Table headers={headers2} data={[]} variant={1} /> */}
     </div>
   );
 };

@@ -1,5 +1,5 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
+import React, { useContext, useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Dashboard from "./pages/Admin/Dashboard";
 import List from "./pages/Admin/List";
 import Generate from "./pages/Admin/Generate";
@@ -8,15 +8,22 @@ import Report from "./pages/Admin/Report";
 import MerchantReport from "./pages/Merchant/MerchantReport";
 import MerchantDashboard from "./pages/Merchant/MerchantDashboard";
 import MerchantSearch from "./pages/Merchant/MerchantSearch";
-import { useTranslation } from "react-i18next";
 import Layout from "./components/Layout";
 import Login from "./pages/Login";
 
 const App = () => {
-  // const { t, i18n } = useTranslation();
-
-  // document.body.dir = i18n.dir();
-  // i18n.changeLanguage("en");
+  const nav = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("user-token");
+    const role = localStorage.getItem("role");
+    if (!token) {
+      nav("/");
+    }
+    if (token && role) {
+      role === "Admin" && nav("/dashboard");
+      role === "Menchant" && nav("/menchant");
+    }
+  }, []);
   return (
     <div className="flex min-h-screen font-medium text-gray-900 font-inter bg-gray-50">
       <Routes>
@@ -84,6 +91,7 @@ const App = () => {
             </Layout>
           }
         />
+
         <Route path="/" element={<Login />} />
       </Routes>
     </div>

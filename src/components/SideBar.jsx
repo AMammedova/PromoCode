@@ -67,13 +67,13 @@ const SideBar = ({ variant }) => {
       setActiveId(
         linksDashboard.find(({ link, id }) => {
           return link === `/${pathname.split("/")[2]}`;
-        })?.id
+        })?.id || 1
       );
     variant === 2 &&
       setActiveId(
         linkMerchants.find(({ link, id }) => {
           return link === `/${pathname.split("/")[2]}`;
-        })?.id
+        })?.id || 1
       );
   }, []);
 
