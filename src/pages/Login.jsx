@@ -4,6 +4,7 @@ import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 import AuthContext from "../api/context/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { Apis } from "../utils/apis";
+import axios from "axios";
 const Login = () => {
   const { setAuth } = useContext(AuthContext);
   const [userName, setUserName] = useState("");
@@ -11,18 +12,19 @@ const Login = () => {
   const [show, setShow] = useState(false);
   const { refetch: login, ...response } = useQuery(
     ["login"],
-    () =>
-      Apis.login({
-        username: userName,
-        password: password,
-      }),
+    () => Apis.login(login, header),
     { enabled: false }
   );
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // login({ userName: userName, password: password });
-    Apis.login({ userName: userName, password: password });
-    console.log(Apis.login({ userName: userName, password: password }));
+    login(
+      { userName: userName, password: password },
+      {
+        Authorization:
+          "Bearer eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQXlzZWwiLCJqdGkiOiIyYThmODc5MS00MjAwLTRhZDgtOGY3Ny1jYjMyNWI3MjZjZDQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsIm5iZiI6MTY3NDU1NjU2NiwiZXhwIjoxNjc0NTYyNTY2LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUxMjkiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjcxMjEifQ.ijXbWfBJim8BLSxgkWQZS6nBOK9IMedgvhSBojVWbMohW7gyieNV4yNNY7b4cij5pXQxgqLEZJN0T5_lN-TqfA",
+      }
+    );
+    console.log(response);
   };
   const handleuserName = (e) => setUserName(e.target.value);
 

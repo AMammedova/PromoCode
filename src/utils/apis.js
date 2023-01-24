@@ -8,11 +8,9 @@ const Promocode = axios.create({
 });
 
 const Logins = axios.create({
-  baseURL: "https://promocodepanelapi.inloya.com/api/User",
+  baseURL: "https://promocodepanelapi.inloya.com/api/Users",
   headers: {
     "Content-type": "application/json",
-    Authorization:
-      "Bearer RwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiQXlzZWwiLCJqdGkiOiIyYThmODc5MS00MjAwLTRhZDgtOGY3Ny1jYjMyNWI3MjZjZDQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJBZG1pbiIsIm5iZiI6MTY3NDU1NjU2NiwiZXhwIjoxNjc0NTYyNTY2LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUxMjkiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjcxMjEifQ.ijXbWfBJim8BLSxgkWQZS6nBOK9IMedgvhSBojVWbMohW7gyieNV4yNNY7b4cij5pXQxgqLEZJN0T5_lN-TqfA",
   },
 });
 
@@ -60,11 +58,9 @@ export const Apis = {
     const { data } = await Logins.post("/Register");
     return data;
   },
-  login: async (login) => {
-    const res = await Logins.post("/Login", {
-      userName: "Aysel",
-      password: "123",
-    });
+  login: async (login, header) => {
+    console.log(login, header);
+    const res = await Logins.post("/Login", login, { headers: header });
     return res;
   },
 };
