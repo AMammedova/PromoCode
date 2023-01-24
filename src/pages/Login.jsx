@@ -1,49 +1,29 @@
-import { useState,useEffect,useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import frame from "../assets/images/login-frame.png";
 import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 import AuthContext from "../api/context/AuthProvider";
+import { useQuery } from "@tanstack/react-query";
+import { Apis } from "../utils/apis";
 const Login = () => {
-  const {setAuth}=useContext(AuthContext);
+  const { setAuth } = useContext(AuthContext);
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
-  const [succes,setSucces]=useState(false)
-  const [errMsg,setErrMsg]=useState('')
-
-  useEffect(()=>{
-setErrMsg('')
-  },[password,userName])
-  const handleSubmit =async (e) => {
+  const { refetch: login, ...response } = useQuery(
+    ["login"],
+    () =>
+      Apis.login({
+        username: userName,
+        password: password,
+      }),
+    { enabled: false }
+  );
+  const handleSubmit = (e) => {
     e.preventDefault();
-  try{
-    const response=await axios.post('',Json.stringfy({userName,password}),
-    {
-      headers:{'Content-Type':'application/json'},
-      withCredentials:true
-    }
-    );
-    console.log(Json.stringfy(response?.data));
-    console.log(Json.stringfy(response?.data));
-    console.log(Json.stringfy(response?.data?.accesToken));
-    console.log(Json.stringfy(response?.data?.roles))
-    setSucces(true)
-    setAuth({userName,password,roles,accesToken})
-  }catch(err){
-if(!err?.response){
-  setErrMsg('No Server Response')
-}
-else if(err.response?.status===400){
-  setErrMsg('Missing Username or Password');
-}
-else if(err.response?.status===401){
-  setErrMsg('Unauthorized');
-}
-else{
-  setErrMsg('Login Failed')
-}
-  }
+    // login({ userName: userName, password: password });
+    Apis.login({ userName: userName, password: password });
+    console.log(Apis.login({ userName: userName, password: password }));
   };
-
   const handleuserName = (e) => setUserName(e.target.value);
 
   const handlePassword = (e) => setPassword(e.target.value);

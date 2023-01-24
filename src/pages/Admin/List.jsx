@@ -26,7 +26,7 @@ const List = () => {
     "Export",
   ];
 
-  const { data, isError, isLoading } = useQuery({
+  const { isError, isLoading } = useQuery({
     queryKey: ["getAll"],
     queryFn: Apis.getAll,
   });
