@@ -1,10 +1,18 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "../../styles/header.module.css";
-import { AiOutlineDown } from "react-icons/ai";
+import { MdOutlineLogout } from "react-icons/md";
 import Switcher from "./Switcher";
 import { useTranslation } from "react-i18next";
 const Header = ({ title }) => {
   const { t, i18n } = useTranslation();
+
+  const nav = useNavigate();
+  const handleLogOut=()=>{
+    nav("/");
+    localStorage.clear();
+    console.log("log out")
+  }
   return (
     <div>
       <div className={styles.Navbar}>
@@ -18,7 +26,7 @@ const Header = ({ title }) => {
           <span>Admin</span>
           <span className={styles.LogoAdmin}></span>
           <span>
-            <AiOutlineDown />
+            <MdOutlineLogout style={{fontSize:"34px",cursor:"pointer"}}  color="#4b5563e6" onClick={handleLogOut} />
           </span>
         </div>
       </div>

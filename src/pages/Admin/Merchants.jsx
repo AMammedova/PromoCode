@@ -2,11 +2,36 @@ import React, { useState } from "react";
 import Table from "../../components/Table";
 import { HiOutlinePlusCircle } from "react-icons/hi2";
 import Modal from "../../components/Modal";
+import { useQuery } from "@tanstack/react-query";
+import { Apis } from "../../utils/apis";
+import Loading from "../../components/Loading";
 
 const Merchants = () => {
   const headers = ["id", "partner", "description"];
   const [show, setShow] = useState({ show: false, process: "" });
-  return (
+  const { isError, isLoading, data } = useQuery(
+    ["getData"],
+    Apis.getAllMerchant
+    
+  );
+  // const { refetch: login, data } = useQuery(
+  //   ["register"],
+  //   () =>
+  //     Apis.register({
+  //       userName: userName,
+  //       password: password,
+  //     }),
+  //   {
+  //     enabled: false,
+  //   }
+  // );
+  return isError ? (
+    <div>Error</div>
+  ) : isLoading ? (
+    <div>
+      <Loading />
+    </div>
+  ) : (
     <div>
       <div className="flex items-center justify-between my-10">
         <button
@@ -20,7 +45,7 @@ const Merchants = () => {
           Export
         </button>
       </div>
-      <Table setState={setShow} headers={headers} variant={2} />
+      <Table setState={setShow} headers={headers} data={data} variant={2} />
       <Modal show={show} setShow={setShow} />
     </div>
   );

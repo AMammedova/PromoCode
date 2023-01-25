@@ -1,6 +1,8 @@
 import React, { useReducer } from "react";
-import { Button, Checkbox, Label, Modal, TextInput } from "flowbite-react";
+import { Button, Checkbox, Label, Modal, TextInput,Radio } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi2";
+import { useQuery } from "@tanstack/react-query";
+import { Apis } from "../utils/apis";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -20,6 +22,8 @@ const reducer = (state, action) => {
 
     case "merchant":
       return { ...state, merchant: action.payload };
+    case "roleName":
+      return { ...state, roleName: action.payload };
 
     default:
       return state;
@@ -32,9 +36,32 @@ const ModalComponent = ({ show: { show, process }, setShow }) => {
     description: "",
     userName: "",
     password: "",
-    admin: false,
-    merchant: false,
+    admin: "",
+    merchant: "",
+    roleName:""
   });
+
+
+  const { refetch: register, data } = useQuery(
+    ["register"],
+    () =>
+      Apis.register({
+        userName: initialState.userName,
+        merchantName:initialState.merchantName,
+        description:initialState.description,
+        password:initialState.password,
+        roleName:initialState.roleName
+        
+      }),
+    {
+      enabled: false,
+    }
+  );
+ 
+  const handleAdd=async()=>{
+    register();
+    console.log(data,"yuop")
+  }
   return (
     <div>
       <Modal
@@ -110,26 +137,26 @@ const ModalComponent = ({ show: { show, process }, setShow }) => {
                 </div>
                 <div className="flex gap-8">
                   <div className="flex items-center gap-2">
-                    <Checkbox
-                      id="admin"
+                    <Radio
+                      id="Admin"
                       checked={initialState.admin}
                       onChange={(e) =>
                         dispatch({
                           type: "admin",
-                          payload: e.target.checked,
+                          payload: e.target.id,
                         })
                       }
                     />
                     <Label>Admin</Label>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Checkbox
-                      id="merchant"
+                    <Radio
+                      id="Merchant"
                       checked={initialState.merchant}
                       onChange={(e) => {
                         dispatch({
                           type: "merchant",
-                          payload: e.target.checked,
+                          payload: e.target.id,
                         });
                       }}
                     />
@@ -138,7 +165,7 @@ const ModalComponent = ({ show: { show, process }, setShow }) => {
                 </div>
               </div>
               <div className="flex justify-center">
-                <Button className="!bg-amber-500 hover:!bg-amber-600">
+                <Button className="!bg-amber-500 hover:!bg-amber-600" onClick={handleAdd}>
                   Log in to your account
                 </Button>
               </div>
@@ -204,7 +231,8 @@ const ModalComponent = ({ show: { show, process }, setShow }) => {
               </div>
               <div className="flex justify-center">
                 <Button className="!bg-amber-500 hover:!bg-amber-600">
-                  Log in to your account
+                Log in to your account
+                 
                 </Button>
               </div>
             </div>

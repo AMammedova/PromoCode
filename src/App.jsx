@@ -14,15 +14,21 @@ import Login from "./pages/Login";
 const App = () => {
   const nav = useNavigate();
   useEffect(() => {
+    
     const token = localStorage.getItem("user-token");
     const role = localStorage.getItem("role");
-    if (!token) {
+    console.log(role,"")
+    if (!token && !role) {
+     
       nav("/");
+      localStorage.clear();
+    
     }
     if (token && role) {
       role === "Admin" && nav("/dashboard");
-      role === "Menchant" && nav("/menchant");
+      role === "Merchant" && nav("/merchant");
     }
+    
   }, []);
   return (
     <div className="flex min-h-screen font-medium text-gray-900 font-inter bg-gray-50">

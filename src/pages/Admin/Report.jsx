@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import styles from "../../../styles/report.module.css";
 import TableComponent from "../../components/Table";
+import Loading from "../../components/Loading";
+import { useQuery } from "@tanstack/react-query";
+import { Apis } from "../../utils/apis";
 const Reports = () => {
   const [merchant, setMerchant] = useState("");
   const [source, setSource] = useState("");
@@ -15,7 +18,18 @@ const Reports = () => {
     "source",
     "status",
   ];
-  return (
+  const { isError, isLoading, data } = useQuery(
+    ["getData"],
+    Apis.getAllPromocode
+    
+  );
+  return isError ? (
+    <div>Error</div>
+  ) : isLoading ? (
+    <div>
+      <Loading />
+    </div>
+  ) : (
     <div className="space-y-8">
       <div className="flex justify-between">
         <div className="flex-1">
@@ -66,7 +80,7 @@ const Reports = () => {
           </button>
         </div>
       </div>
-      <TableComponent headers={headers} variant={1} />
+      <TableComponent headers={headers} data={data} variant={1} />
     </div>
   );
 };

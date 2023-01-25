@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const token = import.meta.env.VITE_TOKEN;
+// const token = import.meta.env.VITE_TOKEN;
+const token = localStorage.getItem("user-token");
+
 
 const Promocode = axios.create({
   baseURL: "https://promocodepanelapi.inloya.com/api/Promocode",
@@ -34,8 +36,8 @@ export const Apis = {
     const { data } = await Merchant.get("/All");
     return data;
   },
-  editMerchant: async () => {
-    const { data } = await Merchant.get("/Edit");
+  editMerchant: async (editMerchant) => {
+    const { data } = await Merchant.put("/Edit",editMerchant);
     return data;
   },
   deleteMerchant: async () => {
@@ -63,8 +65,13 @@ export const Apis = {
     const { data } = await Promocode.post("/Use");
     return data;
   },
-  register: async () => {
-    const { data } = await Logins.post("/Register");
+  register: async (register) => {
+    const { data } = await Logins.post("/Register",register);
+    return data;
+  },
+  filter: async (filter) => {
+    const { data } = await Promocode.post("/Filter", filter);
+    console.log(data,"filterdata")
     return data;
   },
   login: async (login) => {

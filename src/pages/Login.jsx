@@ -34,16 +34,32 @@ const Login = () => {
   const handlePasswordShow = () => setShow(!show);
 
   useEffect(() => {
+
     if (data) {
       const token = data.data.token;
       const decoded = jwt_decode(token);
-      const role = Object.entries(decoded)[2];
-      setAuth({ "user-token": token, role: role[1] });
+      console.log(decoded,"decoded")
+      const role = Object.entries(decoded)[3][1];
+      console.log(role,"rolee")
+      setAuth({ "user-token": token, role: role });
       localStorage.clear();
       localStorage.setItem("user-token", token);
-      localStorage.setItem("role", role[1]);
-      if (role[1] === "Admin") {
-        nav("/dashboard");
+      localStorage.setItem("role", role);
+      const getToken=localStorage.getItem("user-token");
+      const getRole= localStorage.getItem("role");
+      // if (role === "Admin") {
+      //   nav("/dashboard");
+      // }
+      // if (!token && !role) {
+     
+      //   nav("/");
+      //   // localStorage.clear();
+      
+      // }
+      if (token && role) {
+        role === "Admin" && nav("/dashboard");
+        role === "Merchant" && nav("/merchant");
+        window.location.reload(true)
       }
     }
   }, [data]);

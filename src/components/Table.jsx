@@ -17,27 +17,27 @@ const TableComponent = ({ headers, variant, setState, data }) => {
           <Table.Body className="divide-y">
             {data?.data.map(
               ({
-                appUser,
+                merchantName,
                 name,
                 id,
                 description,
                 startDate,
                 endDate,
                 isUsed,
-                source,
+                sourceName,
               }) => (
                 <Table.Row
                   key={id}
                   className="font-normal bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
                   <Table.Cell>{name}</Table.Cell>
-                  <Table.Cell>{appUser}</Table.Cell>
+                  <Table.Cell>{merchantName}</Table.Cell>
                   <Table.Cell className="text-blue-700">
                     {description}
                   </Table.Cell>
                   <Table.Cell>{startDate}</Table.Cell>
                   <Table.Cell>{endDate}</Table.Cell>
-                  <Table.Cell>{source}</Table.Cell>
+                  <Table.Cell>{sourceName}</Table.Cell>
                   <Table.Cell
                     key={id}
                     className={` ${isUsed && "text-green-400"}`}
@@ -47,6 +47,7 @@ const TableComponent = ({ headers, variant, setState, data }) => {
                 </Table.Row>
               )
             )}
+            
           </Table.Body>
         </Table>
       ) : variant === 2 ? (
@@ -65,11 +66,18 @@ const TableComponent = ({ headers, variant, setState, data }) => {
             </Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
-            {/* {data.data.map((item) => (
-              <Table.Row key={item.id} className="font-normal bg-white">
-                <Table.Cell>{item.id}</Table.Cell>
-                <Table.Cell>{item.merchant}</Table.Cell>
-                <Table.Cell>{item.desc}</Table.Cell>
+            {data.data.map(
+              
+              ({
+                id,
+                merchantName,
+                description,
+                
+              })=> (
+              <Table.Row key={id} className="font-normal bg-white">
+                <Table.Cell>{id}</Table.Cell>
+                <Table.Cell>{merchantName}</Table.Cell>
+                <Table.Cell>{ description}</Table.Cell>
                 <Table.Cell>
                   <HiOutlinePencilSquare
                     onClick={() => setState({ show: true, process: "onEdit" })}
@@ -87,14 +95,14 @@ const TableComponent = ({ headers, variant, setState, data }) => {
                   />
                 </Table.Cell>
               </Table.Row>
-            ))} */}
+            ))}
           </Table.Body>
         </Table>
       ) : (
         ""
       )}
       <div className="flex items-center justify-end py-4 text-center">
-        <Pagination currentPage={1} totalPages={1000} onPageChange={() => ""} />
+        <Pagination currentPage={5} totalPages={1000} onPageChange={() => ""} />
       </div>
     </div>
   );
