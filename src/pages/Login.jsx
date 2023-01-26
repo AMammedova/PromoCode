@@ -3,11 +3,10 @@ import frame from "../assets/images/login-frame.png";
 import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 import AuthContext from "../api/context/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
-import { Apis } from "../utils/apis";
+import { Apis,setToken } from "../utils/apis";
 import jwt_decode from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { redirect,useNavigate } from "react-router-dom";
 const Login = () => {
-  const { setAuth } = useContext(AuthContext);
   const nav = useNavigate();
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -38,29 +37,20 @@ const Login = () => {
     if (data) {
       const token = data.data.token;
       const decoded = jwt_decode(token);
-      console.log(decoded,"decoded")
+      
+      setToken(token)
+
       const role = Object.entries(decoded)[3][1];
-      console.log(role,"rolee")
-      setAuth({ "user-token": token, role: role });
+
       localStorage.clear();
       localStorage.setItem("user-token", token);
       localStorage.setItem("role", role);
-      const getToken=localStorage.getItem("user-token");
-      const getRole= localStorage.getItem("role");
-      // if (role === "Admin") {
-      //   nav("/dashboard");
-      // }
-      // if (!token && !role) {
-     
-      //   nav("/");
-      //   // localStorage.clear();
-      
-      // }
+  
       if (token && role) {
         role === "Admin" && nav("/dashboard");
         role === "Merchant" && nav("/merchant");
-        window.location.reload(true)
       }
+
     }
   }, [data]);
 

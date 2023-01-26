@@ -1,35 +1,51 @@
 import axios from "axios";
 
 // const token = import.meta.env.VITE_TOKEN;
-const token = localStorage.getItem("user-token");
+let Promocode,Merchant
 
+Promocode = axios.create({
+  baseURL: "https://promocodepanelapi.inloya.com/api/Promocode",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("user-token")}`,
 
-const Promocode = axios.create({
+    "Content-type": "application/json",
+  }});
+
+  Merchant = axios.create({
+    baseURL: "https://promocodepanelapi.inloya.com/api/Merchant",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+  
+      "Content-type": "application/json",
+    },
+  })
+
+export const setToken = (token) => {
+  Promocode = axios.create({
   baseURL: "https://promocodepanelapi.inloya.com/api/Promocode",
   headers: {
     Authorization: `Bearer ${token}`,
 
     "Content-type": "application/json",
-  },
-});
+  }});
+
+  Merchant = axios.create({
+    baseURL: "https://promocodepanelapi.inloya.com/api/Merchant",
+    headers: {
+      Authorization: `Bearer ${token}`,
+  
+      "Content-type": "application/json",
+    },
+  })
+}
 
 const Logins = axios.create({
   baseURL: "https://promocodepanelapi.inloya.com/api/Users",
   headers: {
-    Authorization: `Bearer ${token}`,
-
     "Content-type": "application/json",
   },
 });
 
-const Merchant = axios.create({
-  baseURL: "https://promocodepanelapi.inloya.com/api/Merchant",
-  headers: {
-    Authorization: `Bearer ${token}`,
-
-    "Content-type": "application/json",
-  },
-});
 
 export const Apis = {
   getAllMerchant: async () => {
@@ -71,7 +87,6 @@ export const Apis = {
   },
   filter: async (filter) => {
     const { data } = await Promocode.post("/Filter", filter);
-    console.log(data,"filterdata")
     return data;
   },
   login: async (login) => {

@@ -4,48 +4,45 @@ import { useQuery } from "@tanstack/react-query";
 import { Apis } from "../../utils/apis";
 import Loading from "../../components/Loading";
 import TableList from "../../components/TableList";
-
+import Select from "react-select";
 const List = () => {
-  const [source, setSource] = useState();
-  const [filteredData,setFilteredData]=useState()
-  const [currentPage,setCurrentPage]=useState(1);
-  console.log(source)
-  const defaultValue=null;
-  const { refetch: filter, ...filterData } = useQuery(
-    ["filter"],
-    () =>
-      Apis.filter({
-        sourceId: source,
-        statusId: null,
-        merchantId:null,
-        startDate:null,
-        endDate: null
-
-      }),
-    {
-      enabled: false,
-   
-    }
-  );
+  const options = [
+    { value: "", label: "Choose an option" },
+    { value: "1", label: "Telegram Bot" },
+    { value: "2", label: "Whatsapp support center" },
+    { value: "3", label: "Easysavings web-site" },
+  ];
+  const [filteredData,setFilteredData]=useState([])
+  const [currentPage,setCurrentPage]=useState();
   const { isError, isLoading, data } = useQuery(
     ["getData"],
     Apis.getAllPromocode
-    
   );
-  const [getAllData,setGetAllData]=useState(data)
-  console.log(getAllData,"alldata")
-//   useEffect(()=>{
-//     console.log(filteredData,"filteredData")
-//  setFilteredData(data)
-//   },[data])
-  const handleFilter=async (e)=>{
-    setSource(e.target.value);
-    filter();
-    setFilteredData(filterData)
-    console.log(filterData.data,"filtirr")
-    setGetAllData(filterData.data)
+
+  useEffect(()=>{
+    setFilteredData(data)
+  },[data])
+
+
+  const handleFilter= async ({value})=>{
+   try {
+    const res = await Apis.filter({
+      sourceId: value,
+      statusId: null,
+      merchantId:null,
+      startDate:null,
+      endDate: null
+
+    })
+   setFilteredData(res) 
+   } catch(err) {
+    setFilteredData(data)
+   }
+ 
+}
+
+
   
-  }
   const onPageChange=(props,e)=>{
 console.log(props,e.target,"pagee")
   }
@@ -81,14 +78,9 @@ console.log(props,e.target,"pagee")
     <div>
       <div className="flex items-center max-w-xs gap-2 mb-8 ">
         <label className="whitespace-nowrap">Sort by Source</label>
-        <select defaultValue={defaultValue} value={source} onChange={(e) => handleFilter(e)}>
-          <option defaultValue={defaultValue}>Choose an option</option>
-          <option value="1">Telegram Bot</option>
-          <option value="2">Whatsapp support center</option>
-          <option value="3">Easysavings web-site</option>
-        </select>
+        <Select options={options} onChange={handleFilter} />
       </div>
-      <Table headers={headers} data={getAllData} variant={1} />
+      <Table headers={headers} data={filteredData} variant={1} />
       {/* <TableList headers={headers2} /> */}
     </div>
   );

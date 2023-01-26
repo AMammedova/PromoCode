@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,redirect } from "react-router-dom";
 import styles from "../../styles/header.module.css";
 import { MdOutlineLogout } from "react-icons/md";
 import Switcher from "./Switcher";
@@ -8,11 +8,12 @@ const Header = ({ title }) => {
   const { t, i18n } = useTranslation();
 
   const nav = useNavigate();
+
   const handleLogOut=()=>{
-    nav("/");
     localStorage.clear();
-    console.log("log out")
+    nav("/login");
   }
+
   return (
     <div>
       <div className={styles.Navbar}>
