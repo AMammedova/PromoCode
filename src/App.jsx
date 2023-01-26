@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import React from "react";
+import { Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/Admin/Dashboard";
 import List from "./pages/Admin/List";
 import Generate from "./pages/Admin/Generate";
@@ -10,29 +10,17 @@ import MerchantDashboard from "./pages/Merchant/MerchantDashboard";
 import MerchantSearch from "./pages/Merchant/MerchantSearch";
 import Layout from "./components/Layout";
 import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute"
+import AdminRoute from "./components/AdminRoute";
+import MerchantRoute from "./components/MerchantRoute";
 
 const App = () => {
-  const nav = useNavigate();
-  const token = localStorage.getItem("user-token");
-  const role = localStorage.getItem("role");
-  useEffect(() => {
-    
-    console.log(role,"")
-    if (!token && !role) {
-     
-      nav("/");
-      localStorage.clear();
-    
-    }
-    if (token && role) {
-      role === "Admin" && nav("/dashboard");
-      role === "Merchant" && nav("/merchant");
-    }
-    
-  }, [token,role]);
+
   return (
     <div className="flex min-h-screen font-medium text-gray-900 font-inter bg-gray-50">
       <Routes>
+        <Route element={<ProtectedRoute/>}>
+        <Route element={ <AdminRoute/>}>
         <Route
           path="/dashboard"
           element={
@@ -40,7 +28,7 @@ const App = () => {
               <Dashboard />
             </Layout>
           }
-        />
+        exact/>
         <Route
           path="/dashboard/list"
           element={
@@ -48,7 +36,7 @@ const App = () => {
               <List />
             </Layout>
           }
-        />
+        exact/>
         <Route
           path="/dashboard/generate"
           element={
@@ -56,7 +44,7 @@ const App = () => {
               <Generate />
             </Layout>
           }
-        />
+        exact/>
         <Route
           path="/dashboard/merchants"
           element={
@@ -64,7 +52,7 @@ const App = () => {
               <Merchants />
             </Layout>
           }
-        />
+        exact/>
         <Route
           path="/dashboard/report"
           element={
@@ -72,7 +60,17 @@ const App = () => {
               <Report />
             </Layout>
           }
-        />
+        exact/>
+        </Route>
+       <Route element={<MerchantRoute/>}>
+         <Route
+           path="/merchant"
+           element={
+             <Layout variant={2} title="Dashboard">
+               <MerchantDashboard />
+             </Layout>
+           }
+         exact/>
         <Route
           path="/merchant/report"
           element={
@@ -80,15 +78,7 @@ const App = () => {
               <MerchantReport />
             </Layout>
           }
-        />
-        <Route
-          path="/merchant"
-          element={
-            <Layout variant={2} title="Dashboard">
-              <MerchantDashboard />
-            </Layout>
-          }
-        />
+        exact/>
         <Route
           path="/merchant/search"
           element={
@@ -96,9 +86,9 @@ const App = () => {
               <MerchantSearch />
             </Layout>
           }
-        />
-
-        <Route path="/" element={<Login />} />
+        exact/>
+</Route></Route>
+        <Route path="/login" element={<Login />} />
       </Routes>
     </div>
   );

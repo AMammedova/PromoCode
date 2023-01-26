@@ -3,21 +3,20 @@ import { Pagination, Table } from "flowbite-react";
 import { HiOutlinePencilSquare, HiOutlineTrash } from "react-icons/hi2";
 const TableComponent = ({ headers, variant, setState, data,setModalItem }) => {
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage] = useState(5);
 
-  const [currentPage,setCurrentPage]=useState(1);
-
-  const [pageData,setPageData]=useState({
-    total:0,page:0
-  });
 
   const onPageChange=(page)=>{
-    setCurrentPage(page)
-   
-      }
-// const pagination=()=>{
-
-// }
-
+      setCurrentPage(page)
+  }
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = data?.data?.slice(indexOfFirstPost, indexOfLastPost);
+console.log(data?.data)
+useEffect(()=>{
+  setCurrentPage(1)
+},[data])
   return (
     <div className="w-full">
       {variant === 1 ? (
@@ -30,7 +29,7 @@ const TableComponent = ({ headers, variant, setState, data,setModalItem }) => {
             ))}
           </Table.Head>
           <Table.Body className="divide-y">
-            {data?.data.map(
+            {currentPosts?.map(
               ({
                 merchantName,
                 name,
@@ -54,7 +53,6 @@ const TableComponent = ({ headers, variant, setState, data,setModalItem }) => {
                   <Table.Cell>{endDate}</Table.Cell>
                   <Table.Cell>{sourceName}</Table.Cell>
                   <Table.Cell
-                    key={id}
                     className={` ${isUsed && "text-green-400"}`}
                   >
                     {isUsed ? "USED" : "UNUSED"}
@@ -81,7 +79,7 @@ const TableComponent = ({ headers, variant, setState, data,setModalItem }) => {
             </Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
-            {data.data.map(
+            {currentPosts?.map(
               
               ({
                 id,
@@ -121,7 +119,7 @@ const TableComponent = ({ headers, variant, setState, data,setModalItem }) => {
         ""
       )}
       <div className="flex items-center justify-end py-4 text-center">
-        <Pagination currentPage={currentPage} totalPages={pageData.total} onPageChange={onPageChange} />
+        <Pagination currentPage={currentPage} totalPages={Math.ceil(data?.data?.length /5) || 10} onPageChange={onPageChange} />
       </div>
     </div>
   );
