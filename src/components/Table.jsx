@@ -1,8 +1,23 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import { Pagination, Table } from "flowbite-react";
 import { HiOutlinePencilSquare, HiOutlineTrash } from "react-icons/hi2";
-const TableComponent = ({ headers, variant, setState, data }) => {
-  //fetch api
+const TableComponent = ({ headers, variant, setState, data,setModalItem }) => {
+
+
+  const [currentPage,setCurrentPage]=useState(1);
+
+  const [pageData,setPageData]=useState({
+    total:0,page:0
+  });
+
+  const onPageChange=(page)=>{
+    setCurrentPage(page)
+   
+      }
+// const pagination=()=>{
+
+// }
+
   return (
     <div className="w-full">
       {variant === 1 ? (
@@ -72,15 +87,18 @@ const TableComponent = ({ headers, variant, setState, data }) => {
                 id,
                 merchantName,
                 description,
+                userName
+
                 
               })=> (
               <Table.Row key={id} className="font-normal bg-white">
                 <Table.Cell>{id}</Table.Cell>
                 <Table.Cell>{merchantName}</Table.Cell>
-                <Table.Cell>{ description}</Table.Cell>
+                <Table.Cell>{description}</Table.Cell>
                 <Table.Cell>
                   <HiOutlinePencilSquare
-                    onClick={() => setState({ show: true, process: "onEdit" })}
+                    onClick={() =>{ setState({ show: true, process: "onEdit" });setModalItem({id,merchantName,description,userName
+                    })}}
                     className="cursor-pointer hover:stroke-gray-900"
                     size={20}
                   />
@@ -88,7 +106,8 @@ const TableComponent = ({ headers, variant, setState, data }) => {
                 <Table.Cell>
                   <HiOutlineTrash
                     onClick={() =>
-                      setState({ show: true, process: "onDelete" })
+                     { setState({ show: true, process: "onDelete" });setModalItem({id,merchantName,description,userName
+                     })}
                     }
                     className="cursor-pointer hover:stroke-gray-900"
                     size={20}
@@ -102,7 +121,7 @@ const TableComponent = ({ headers, variant, setState, data }) => {
         ""
       )}
       <div className="flex items-center justify-end py-4 text-center">
-        <Pagination currentPage={5} totalPages={1000} onPageChange={() => ""} />
+        <Pagination currentPage={currentPage} totalPages={pageData.total} onPageChange={onPageChange} />
       </div>
     </div>
   );

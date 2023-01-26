@@ -8,23 +8,14 @@ import Loading from "../../components/Loading";
 
 const Merchants = () => {
   const headers = ["id", "partner", "description"];
+  const [modalItem,setModalItem]=useState({})
   const [show, setShow] = useState({ show: false, process: "" });
   const { isError, isLoading, data } = useQuery(
-    ["getData"],
+    ["getDataMerchant"],
     Apis.getAllMerchant
-    
-  );
-  // const { refetch: login, data } = useQuery(
-  //   ["register"],
-  //   () =>
-  //     Apis.register({
-  //       userName: userName,
-  //       password: password,
-  //     }),
-  //   {
-  //     enabled: false,
-  //   }
-  // );
+    );
+    console.log(data,"deletedata")
+ 
   return isError ? (
     <div>Error</div>
   ) : isLoading ? (
@@ -32,6 +23,7 @@ const Merchants = () => {
       <Loading />
     </div>
   ) : (
+    
     <div>
       <div className="flex items-center justify-between my-10">
         <button
@@ -45,8 +37,8 @@ const Merchants = () => {
           Export
         </button>
       </div>
-      <Table setState={setShow} headers={headers} data={data} variant={2} />
-      <Modal show={show} setShow={setShow} />
+      <Table setState={setShow} headers={headers} data={data} variant={2} setModalItem={setModalItem}/>
+      <Modal show={show} setShow={setShow} modalItem={modalItem}/>
     </div>
   );
 };

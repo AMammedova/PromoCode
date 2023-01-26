@@ -1,5 +1,7 @@
 import React,{useState} from 'react'
 import styles from '../../styles/generate.module.css'
+import { useQuery } from "@tanstack/react-query";
+import { Apis } from "../utils/apis";
 const RandomGenerate = () => {
   const [count, setCount] = useState();
   const [description, setDescription] = useState("");
@@ -12,7 +14,28 @@ const RandomGenerate = () => {
   const handleDateStart=(e)=>setDateStart(e.target.value)
   const handleDateEnd=(e)=>setDateEnd(e.target.value)
   const handleMerchant=(e)=>setMerchant(e.target.value)
-  const handleSource=(e)=>setDsetSourceteEnd(e.target.value)
+  const handleSource=(e)=>setSource(e.target.value)
+
+  const { refetch: addRandom, data } = useQuery(
+    ["randomGenerate"],
+    () =>
+      Apis.addRandom({
+        description:description,
+        sourceId:source,
+        typeId:2,
+        startDate:dateStart,
+        endDate:dateEnd,
+        merchantName:merchant
+      },count),
+    {
+      enabled: false,
+    }
+  );
+  const handleGenerate = async (e) => {
+   
+    addRandom();
+    console.log(data,"randomgeneratedata")
+  };
 
   return (
     <div className={styles.RandomGenerate}>
@@ -48,15 +71,19 @@ const RandomGenerate = () => {
             <label>Source</label>
             <select value={source} onChange={handleSource}>
 
-  <option value="US">United States</option>
- 
+            <option value={null}></option>
+            <option value={1}>Telegram Bot</option>
+          <option value={2}>Whatsapp support center</option>
+          <option value={3}>Easysavings web-site</option>
 </select>
             </div>
             <div className={styles.ItemContainer}>
             <label>Merchant</label>
             <select value={merchant} onChange={handleMerchant}>
- 
-  <option value="US">United States</option>
+            <option value={null}></option>
+            <option value={1}>Telegram Bot</option>
+          <option value={2}>Whatsapp support center</option>
+          <option value={3}>Easysavings web-site</option>
  
 </select>
             </div>
@@ -92,7 +119,7 @@ const RandomGenerate = () => {
 
 <div className='w-1/2 flex justify-center items-center'>
 
-        <button className="w-full max-w-xs text-xl rounded-md submit text-gray-50 bg-gradient-to-r mt-12 py-3 hover:scale-105 transition-all from-[#F25019] to-[#F79E1B]">
+        <button className="w-full max-w-xs text-xl rounded-md submit text-gray-50 bg-gradient-to-r mt-12 py-3 hover:scale-105 transition-all from-[#F25019] to-[#F79E1B]" onClick={handleGenerate}>
                 Generate
               </button>
 </div>

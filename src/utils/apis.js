@@ -37,11 +37,11 @@ export const Apis = {
     return data;
   },
   editMerchant: async (editMerchant) => {
-    const { data } = await Merchant.put("/Edit",editMerchant);
+    const { data } = await Merchant.post("/Edit",editMerchant);
     return data;
   },
-  deleteMerchant: async () => {
-    const { data } = await Merchant.get("/Delete");
+  deleteMerchant: async (merchantId) => {
+    const { data } = await Merchant.post(`/Delete?merchantId=${merchantId}`);
     return data;
   },
   getAllPromocode: async () => {
@@ -49,12 +49,12 @@ export const Apis = {
     console.log(data);
     return data;
   },
-  addRandom: async () => {
-    const { data } = await Promocode.post("/addRandom");
+  addRandom: async (random,count) => {
+    const { data } = await Promocode.post(`/AddRandom?count=${count}`,random);
     return data;
   },
-  addCostum: async () => {
-    const { data } = await Promocode.post("/addCostum");
+  addCostum: async (custom) => {
+    const { data } = await Promocode.post("/AddCustom",custom);
     return data;
   },
   activatePromocode: async () => {

@@ -18,27 +18,27 @@ const reducer = (state, action) => {
       return { ...state, password: action.payload };
 
     case "admin":
-      return { ...state, admin: action.payload };
+      
+      return { ...state, admin: action.payload,merchant:!action.payload,roleName:"Admin"};
+
 
     case "merchant":
-      return { ...state, merchant: action.payload };
-    case "roleName":
-      return { ...state, roleName: action.payload };
-
+      return { ...state, merchant: action.payload ,admin:!action.payload,roleName:"Merchant"};
+    
     default:
       return state;
   }
 };
 
-const ModalComponent = ({ show: { show, process }, setShow }) => {
+const ModalComponent = ({ show: { show, process }, setShow ,modalItem}) => {
   const [initialState, dispatch] = useReducer(reducer, {
     merchantName: "",
     description: "",
     userName: "",
     password: "",
-    admin: "",
-    merchant: "",
-    roleName:""
+    admin: true,
+    merchant:false,
+    roleName:"Admin"
   });
 
 
@@ -46,6 +46,7 @@ const ModalComponent = ({ show: { show, process }, setShow }) => {
     ["register"],
     () =>
       Apis.register({
+        
         userName: initialState.userName,
         merchantName:initialState.merchantName,
         description:initialState.description,
@@ -57,11 +58,43 @@ const ModalComponent = ({ show: { show, process }, setShow }) => {
       enabled: false,
     }
   );
- 
+  const { refetch: deleteMerchant, ...deleteData } = useQuery(
+    ["register"],
+    () =>
+      Apis.deleteMerchant(modalItem.id),
+    {
+      enabled: false,
+    }
+  );
+  const { refetch: editMerchant, ...editMerchantData } = useQuery(
+    ["editMerchantData"],
+    () =>
+      Apis.editMerchant({
+        id:modalItem.id,
+        userName: initialState.userName,
+        merchantName:initialState.merchantName,
+        description:initialState.description,
+        password:initialState.password,
+        
+        
+      }),
+    {
+      enabled: false,
+    }
+  );
   const handleAdd=async()=>{
     register();
-    console.log(data,"yuop")
+   
   }
+  
+   const handleDelete=async()=>{
+    deleteMerchant();
+
+   }
+   const handleUpdate=()=>{
+    editMerchant()
+   }
+   console.log(modalItem,"deletedId");
   return (
     <div>
       <Modal
@@ -137,26 +170,28 @@ const ModalComponent = ({ show: { show, process }, setShow }) => {
                 </div>
                 <div className="flex gap-8">
                   <div className="flex items-center gap-2">
-                    <Radio
+                    <Checkbox
                       id="Admin"
+                      name="radio"
                       checked={initialState.admin}
                       onChange={(e) =>
                         dispatch({
                           type: "admin",
-                          payload: e.target.id,
+                          payload: e.target.checked,
                         })
                       }
                     />
                     <Label>Admin</Label>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Radio
+                    <Checkbox
                       id="Merchant"
+                      name="radio"
                       checked={initialState.merchant}
                       onChange={(e) => {
                         dispatch({
                           type: "merchant",
-                          payload: e.target.id,
+                          payload: e.target.checked,
                         });
                       }}
                     />
@@ -182,6 +217,10 @@ const ModalComponent = ({ show: { show, process }, setShow }) => {
                   id="merchantName"
                   placeholder="Merchant Name"
                   required={true}
+                  value={modalItem.merchantName}
+                  onChange={(e) =>
+                    dispatch({ type: "merchantName", payload: e.target.value })
+                  }
                 />
               </div>
               <div>
@@ -192,6 +231,10 @@ const ModalComponent = ({ show: { show, process }, setShow }) => {
                   id="description"
                   placeholder="Description"
                   required={true}
+                  value={modalItem.description}
+                  onChange={(e) =>
+                    dispatch({ type: "description", payload: e.target.value })
+                  }
                 />
               </div>
               <div>
@@ -202,6 +245,11 @@ const ModalComponent = ({ show: { show, process }, setShow }) => {
                   id="userName"
                   placeholder="User Name"
                   required={true}
+                  value={modalItem.userName}
+                  onChange={(e) =>
+                    dispatch({ type: "userName", payload: e.target.value })
+                  }
+                  
                 />
               </div>
               <div>
@@ -212,10 +260,13 @@ const ModalComponent = ({ show: { show, process }, setShow }) => {
                   id="password"
                   placeholder="Password"
                   required={true}
+                  onChange={(e) =>
+                    dispatch({ type: "password", payload: e.target.value })
+                  }
                 />
               </div>
               <div>
-                <div className="block mb-2">
+                {/* <div className="block mb-2">
                   <Label value="Access" />
                 </div>
                 <div className="flex gap-8">
@@ -227,11 +278,11 @@ const ModalComponent = ({ show: { show, process }, setShow }) => {
                     <Checkbox id="merchant" />
                     <Label>Merchant</Label>
                   </div>
-                </div>
+                </div> */}
               </div>
               <div className="flex justify-center">
-                <Button className="!bg-amber-500 hover:!bg-amber-600">
-                Log in to your account
+                <Button className="!bg-amber-500 hover:!bg-amber-600" onClick={handleUpdate}>
+               Update
                  
                 </Button>
               </div>
@@ -245,12 +296,12 @@ const ModalComponent = ({ show: { show, process }, setShow }) => {
                 Are you sure you want to delete this merchant?
               </h3>
               <div className="flex justify-center gap-4">
-                <Button color="failure" onClick={() => ""}>
+                <Button color="failure"  onClick={handleDelete}>
                   Yes, I'm sure
                 </Button>
                 <Button
                   color="gray"
-                  onClick={() => setShow({ show: false, process: "" })}
+                  onClick={()=>{setShow({ show: false, process: "" })}}
                 >
                   No, cancel
                 </Button>

@@ -8,6 +8,7 @@ const Reports = () => {
   const [merchant, setMerchant] = useState("");
   const [source, setSource] = useState("");
   const [dateStart, setDateStart] = useState("");
+  const [dateEnd,setDateEnd]=useState("");
   const [status, setStatus] = useState("");
   const headers = [
     "Promocode",
@@ -55,22 +56,39 @@ const Reports = () => {
           </div>
           <div className="grid max-w-xl grid-cols-2 gap-4 py-5">
             <div className="flex items-center justify-between gap-2">
-              <label className="whitespace-nowrap">Sort by Status</label>
+
+            <label className="whitespace-nowrap">Sort by DateEnd</label>
+              <input
+                value={dateEnd}
+                onChange={(e) => setDateEnd(e.target.value)}
+                type='date'
+              >
+                
+              </input>
+             
+            </div>
+            <div className="flex items-center justify-between gap-2">
+              <label className="whitespace-nowrap">Sort by Date</label>
+              <input
+                value={dateStart}
+                onChange={(e) => setDateStart(e.target.value)}
+                type='date'
+              >
+               
+              </input>
+            </div>
+          </div>
+          <div className="grid max-w-xl grid-cols-2 gap-4 py-5">
+         
+            <div className="flex items-center justify-between gap-2">
+            <label className="whitespace-nowrap">Sort by Status</label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
               >
                 <option value="US">Used</option>
               </select>
-            </div>
-            <div className="flex items-center justify-between gap-2">
-              <label className="whitespace-nowrap">Sort by Date</label>
-              <select
-                value={dateStart}
-                onChange={(e) => setDateStart(e.target.value)}
-              >
-                <option value="US">Date</option>
-              </select>
+             
             </div>
           </div>
         </div>

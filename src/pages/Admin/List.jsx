@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "../../components/Table";
 import { useQuery } from "@tanstack/react-query";
 import { Apis } from "../../utils/apis";
@@ -7,8 +7,11 @@ import TableList from "../../components/TableList";
 
 const List = () => {
   const [source, setSource] = useState();
+  const [filteredData,setFilteredData]=useState()
+  const [currentPage,setCurrentPage]=useState(1);
   console.log(source)
-  const { refetch: filter, filterData } = useQuery(
+  const defaultValue=null;
+  const { refetch: filter, ...filterData } = useQuery(
     ["filter"],
     () =>
       Apis.filter({
@@ -21,12 +24,30 @@ const List = () => {
       }),
     {
       enabled: false,
+   
     }
   );
-  const handleFilter=(e)=>{
+  const { isError, isLoading, data } = useQuery(
+    ["getData"],
+    Apis.getAllPromocode
+    
+  );
+  const [getAllData,setGetAllData]=useState(data)
+  console.log(getAllData,"alldata")
+//   useEffect(()=>{
+//     console.log(filteredData,"filteredData")
+//  setFilteredData(data)
+//   },[data])
+  const handleFilter=async (e)=>{
     setSource(e.target.value);
     filter();
-    console.log(filterData,'filterdatatable')
+    setFilteredData(filterData)
+    console.log(filterData.data,"filtirr")
+    setGetAllData(filterData.data)
+  
+  }
+  const onPageChange=(props,e)=>{
+console.log(props,e.target,"pagee")
   }
 
   const headers = [
@@ -49,11 +70,7 @@ const List = () => {
     "Export",
   ];
 
-  const { isError, isLoading, data } = useQuery(
-    ["getData"],
-    Apis.getAllPromocode
-    
-  );
+  
   return isError ? (
     <div>Error</div>
   ) : isLoading ? (
@@ -64,15 +81,15 @@ const List = () => {
     <div>
       <div className="flex items-center max-w-xs gap-2 mb-8 ">
         <label className="whitespace-nowrap">Sort by Source</label>
-        <select value={source} onChange={(e) => handleFilter(e)}>
-          <option value={null} selected></option>
+        <select defaultValue={defaultValue} value={source} onChange={(e) => handleFilter(e)}>
+          <option defaultValue={defaultValue}>Choose an option</option>
           <option value="1">Telegram Bot</option>
           <option value="2">Whatsapp support center</option>
           <option value="3">Easysavings web-site</option>
         </select>
       </div>
-      <Table headers={headers} data={data} variant={1} />
-      <TableList headers={headers2} data={data} />
+      <Table headers={headers} data={getAllData} variant={1} />
+      {/* <TableList headers={headers2} /> */}
     </div>
   );
 };

@@ -13,10 +13,10 @@ import Login from "./pages/Login";
 
 const App = () => {
   const nav = useNavigate();
+  const token = localStorage.getItem("user-token");
+  const role = localStorage.getItem("role");
   useEffect(() => {
     
-    const token = localStorage.getItem("user-token");
-    const role = localStorage.getItem("role");
     console.log(role,"")
     if (!token && !role) {
      
@@ -29,7 +29,7 @@ const App = () => {
       role === "Merchant" && nav("/merchant");
     }
     
-  }, []);
+  }, [token,role]);
   return (
     <div className="flex min-h-screen font-medium text-gray-900 font-inter bg-gray-50">
       <Routes>
