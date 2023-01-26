@@ -1,14 +1,9 @@
 import React, { useState } from "react";
-import styles from "../../../styles/report.module.css";
 import TableComponent from "../../components/Table";
-import Loading from "../../components/Loading";
-import { useQuery } from "@tanstack/react-query";
-import { Apis } from "../../utils/apis";
-const Reports = () => {
+const   MerchantReport = () => {
   const [merchant, setMerchant] = useState("");
   const [source, setSource] = useState("");
   const [dateStart, setDateStart] = useState("");
-  const [dateEnd,setDateEnd]=useState("");
   const [status, setStatus] = useState("");
   const headers = [
     "Promocode",
@@ -19,18 +14,7 @@ const Reports = () => {
     "source",
     "status",
   ];
-  const { isError, isLoading, data } = useQuery(
-    ["getData"],
-    Apis.getAllPromocode
-    
-  );
-  return isError ? (
-    <div>Error</div>
-  ) : isLoading ? (
-    <div>
-      <Loading />
-    </div>
-  ) : (
+  return (
     <div className="space-y-8">
       <div className="flex justify-between">
         <div className="flex-1">
@@ -56,39 +40,22 @@ const Reports = () => {
           </div>
           <div className="grid max-w-xl grid-cols-2 gap-4 py-5">
             <div className="flex items-center justify-between gap-2">
-
-            <label className="whitespace-nowrap">Sort by DateEnd</label>
-              <input
-                value={dateEnd}
-                onChange={(e) => setDateEnd(e.target.value)}
-                type='date'
-              >
-                
-              </input>
-             
-            </div>
-            <div className="flex items-center justify-between gap-2">
-              <label className="whitespace-nowrap">Sort by Date</label>
-              <input
-                value={dateStart}
-                onChange={(e) => setDateStart(e.target.value)}
-                type='date'
-              >
-               
-              </input>
-            </div>
-          </div>
-          <div className="grid max-w-xl grid-cols-2 gap-4 py-5">
-         
-            <div className="flex items-center justify-between gap-2">
-            <label className="whitespace-nowrap">Sort by Status</label>
+              <label className="whitespace-nowrap">Sort by Status</label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
               >
                 <option value="US">Used</option>
               </select>
-             
+            </div>
+            <div className="flex items-center justify-between gap-2">
+              <label className="whitespace-nowrap">Sort by Date</label>
+              <select
+                value={dateStart}
+                onChange={(e) => setDateStart(e.target.value)}
+              >
+                <option value="US">Date</option>
+              </select>
             </div>
           </div>
         </div>
@@ -98,9 +65,9 @@ const Reports = () => {
           </button>
         </div>
       </div>
-      <TableComponent headers={headers} data={data} variant={1} />
+      <TableComponent headers={headers} variant={1} />
     </div>
   );
 };
 
-export default Reports;
+export default MerchantReport;

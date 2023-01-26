@@ -1,0 +1,18 @@
+.Switcher {
+  width: 150px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.Switcher span,
+.Switcher p {
+  color: #4b5563e6;
+
+  font-style: normal;
+  font-size: 14px;
+  line-height: 45px;
+}
+.Switcher p:hover {
+  cursor: pointer;
+  scale: 1.25;
+}

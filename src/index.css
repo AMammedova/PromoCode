@@ -2,3 +2,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  input:focus {
+    @apply outline-none !border-none !ring-0;
+  }
+  input {
+    @apply !border-none;
+  }
+  select {
+    @apply w-full max-w-sm text-gray-600 rounded;
+  }
+  label {
+    @apply text-gray-600;
+  }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+@layer components {
+  button[role="tab"][aria-selected="true"] {
+    @apply !text-gray-900 !bg-white !border !border-amber-400;
+  }
+  button[role="tab"] {
+    @apply !font-semibold !px-4 !py-3;
+  }
+}

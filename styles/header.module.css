@@ -1,9 +1,40 @@
-.LogoAdmin{
-    width: 40px;
-    height: 40px;
-    background: url('../src/assets/logoadmin.jpg');
-    border-radius: 100px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    }
+.LogoAdmin {
+  width: 40px;
+  height: 40px;
+  background: url("../src/assets/logoadmin.jpg");
+  border-radius: 100px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.Navbar {
+  padding: 30px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.NavbarTitle {
+  font-style: normal;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 29px;
+  color: #4b5563e6;
+}
+.NavbarSwitcher {
+  display: flex;
+}
+.NavbarAdminLogo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.NavbarAdminLogo span:first-child {
+  color: #4b5563e6;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 29px;
+}
