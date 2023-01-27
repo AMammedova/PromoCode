@@ -13,7 +13,7 @@ const TableComponent = ({ headers, variant, setState, data,setModalItem }) => {
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const currentPosts = data?.data?.slice(indexOfFirstPost, indexOfLastPost);
-console.log(data?.data)
+
 useEffect(()=>{
   setCurrentPage(1)
 },[data])

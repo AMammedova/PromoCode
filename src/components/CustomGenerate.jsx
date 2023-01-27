@@ -1,7 +1,8 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import styles from '../../styles/generate.module.css'
 import { useQuery } from "@tanstack/react-query";
 import { Apis } from "../utils/apis";
+import Select from "react-select";
 const CustomGenerate = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState("");
@@ -14,10 +15,37 @@ const CustomGenerate = () => {
   const handleDescription=(e)=>setDescription(e.target.value)
   const handleDateStart=(e)=>setDateStart(e.target.value)
   const handleDateEnd=(e)=>setDateEnd(e.target.value)
-  const handleMerchant=(e)=>setMerchant(e.target.value)
-  const handleSource=(e)=>setSource(e.target.value)
+  const [optionsSelect,setOptionsSelect]=useState([""])
+  
+  
+
+  const {  ...mercdata } = useQuery(
+    ["getDataCustomMerchant"],
+    Apis.getAllMerchant
+    );
+    useEffect(()=>{
+      const arr=[];
+      mercdata?.data?.data.map((item)=>{
+      
+        return arr.push({value:item.merchantName,label:item.merchantName});
+      })
+      setOptionsSelect(arr);
+    },[])
+  const handleMerchant=({value})=>{
+    setMerchant(value)
+  }
   const handleLimit=(e)=>setLimit(e.target.value)
 
+  const options = [
+    { value: "", label: "Choose an option" },
+    { value: "1", label: "Telegram Bot" },
+    { value: "2", label: "Whatsapp support center" },
+    { value: "3", label: "Easysavings web-site" },
+  ];
+  const handleSource=({value})=>{
+    setSource(value);
+   
+  }
 
   const { refetch: addCostum, data } = useQuery(
     ["customGenerate"],
@@ -73,20 +101,11 @@ const CustomGenerate = () => {
         <div className={`${styles.RandomItem} grid grid-cols-2 gap-4`}>
             <div className={styles.ItemContainer}>
             <label>Source</label>
-            <select value={source} onChange={handleSource}>
-              <option value={null}></option>
-            <option value={1}>Telegram Bot</option>
-          <option value={2}>Whatsapp support center</option>
-          <option value={3}>Easysavings web-site</option>
- 
-</select>
+            <Select options={options} onChange={handleSource} />
             </div>
             <div className={styles.ItemContainer}>
             <label>Merchant</label>
-            <select value={merchant} onChange={handleMerchant}>
-             
- 
-</select>
+            <Select options={optionsSelect} onChange={handleMerchant} />
             </div>
            
         </div>

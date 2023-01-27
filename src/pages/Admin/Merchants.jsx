@@ -14,7 +14,7 @@ const Merchants = () => {
     ["getDataMerchant"],
     Apis.getAllMerchant
     );
-    console.log(data,"deletedata")
+ 
  
   return isError ? (
     <div>Error</div>

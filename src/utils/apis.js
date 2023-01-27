@@ -62,7 +62,7 @@ export const Apis = {
   },
   getAllPromocode: async () => {
     const { data } = await Promocode.get("/All");
-    console.log(data);
+
     return data;
   },
   addRandom: async (random,count) => {

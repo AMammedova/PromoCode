@@ -44,7 +44,7 @@ const List = () => {
 
   
   const onPageChange=(props,e)=>{
-console.log(props,e.target,"pagee")
+
   }
 
   const headers = [

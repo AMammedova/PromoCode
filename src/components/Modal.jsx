@@ -94,7 +94,7 @@ const ModalComponent = ({ show: { show, process }, setShow ,modalItem}) => {
    const handleUpdate=()=>{
     editMerchant()
    }
-   console.log(modalItem,"deletedId");
+   
   return (
     <div>
       <Modal
