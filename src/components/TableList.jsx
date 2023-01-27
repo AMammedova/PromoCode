@@ -1,8 +1,33 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
+import { useQuery } from "@tanstack/react-query";
+import { Apis } from "../utils/apis";
 import { Pagination, Table } from "flowbite-react";
 import { HiOutlinePencilSquare, HiOutlineTrash } from "react-icons/hi2";
-const TableList = ({ headers, variant, setState, data }) => {
-  //fetch api
+const TableList = ({ headers, variant, setState}) => {
+
+  const {  isError,isLoading, data } = useQuery(
+    ["getDataCount"],
+    Apis.getAllPromocodeCount
+  );
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage] = useState(5);
+
+
+  const onPageChange=(page)=>{
+      setCurrentPage(page)
+  }
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = data?.data?.slice(indexOfFirstPost, indexOfLastPost);
+
+useEffect(()=>{
+  setCurrentPage(1)
+},[data])
+
+ 
+  console.log(data,"listdata")
+  
   
   return (
     <div className="w-full">
@@ -16,29 +41,28 @@ const TableList = ({ headers, variant, setState, data }) => {
             ))}
           </Table.Head>
           <Table.Body className="divide-y">
-            {data?.data.map(
+            {currentPosts?.map(
               ({
                 merchantName,
-                name,
+                updatedDate,
                 id,
                 description,
                 count,
-                typeName,
-                
-                sourceName,
+                promocodeType,
+                source,
               }) => (
                 <Table.Row
                   key={id}
                   className="font-normal bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
-                  <Table.Cell>{name}</Table.Cell>
+                  <Table.Cell>{updatedDate}</Table.Cell>
                   <Table.Cell>{merchantName}</Table.Cell>
                   <Table.Cell className="text-blue-700">
                     {description}
                   </Table.Cell>
                   <Table.Cell>{count}</Table.Cell>
-                  <Table.Cell>{typeName}</Table.Cell>
-                  <Table.Cell>{sourceName}</Table.Cell>
+                  <Table.Cell>{promocodeType}</Table.Cell>
+                  <Table.Cell>{source}</Table.Cell>
                   <Table.Cell style={{cursor:"pointer"}}>
                     ZIP
                   </Table.Cell>
@@ -50,7 +74,7 @@ const TableList = ({ headers, variant, setState, data }) => {
         </Table>
       
       <div className="flex items-center justify-end py-4 text-center">
-        <Pagination currentPage={1} totalPages={1000} onPageChange={() => ""} />
+      <Pagination currentPage={currentPage} totalPages={Math.ceil(data?.data?.length /5) || 10} onPageChange={onPageChange} />
       </div>
     </div>
   );
