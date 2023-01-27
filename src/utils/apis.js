@@ -65,6 +65,11 @@ export const Apis = {
 
     return data;
   },
+  getAllPromocodeCount: async () => {
+    const { data } = await Promocode.get("/GetPromocodeCounts");
+
+    return data;
+  },
   addRandom: async (random,count) => {
     const { data } = await Promocode.post(`/AddRandom?count=${count}`,random);
     return data;

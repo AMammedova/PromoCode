@@ -18,6 +18,10 @@ const List = () => {
     ["getData"],
     Apis.getAllPromocode
   );
+  const {  ...countData } = useQuery(
+    ["getDataCount"],
+    Apis.getAllPromocodeCount
+  );
 
   useEffect(()=>{
     setFilteredData(data)
@@ -58,7 +62,7 @@ const List = () => {
   ];
 
   const headers2 = [
-    "Promocode",
+    "Date",
     "merchant",
     "description",
     "Count",
@@ -81,7 +85,7 @@ const List = () => {
         <Select options={options} onChange={handleFilter} />
       </div>
       <Table headers={headers} data={filteredData} variant={1} />
-      {/* <TableList headers={headers2} /> */}
+      <TableList headers={headers2} data={countData}/>
     </div>
   );
 };
