@@ -15,22 +15,22 @@ const [clickedId,setClickedId]=useState("")
   //   Apis.getExcelPromocodes(clickedId)
   // );
  
-useEffect(()=>{
-  async function fetchData(){
-    const response = await fetch(`https://promocodepanelapi.inloya.com/api/Promocode/GetExcelPromocodes?id=${clickedId}`);
-    const blob = await response.blob();
-    // Create a new object URL for the blob
-    const url = window.URL.createObjectURL(blob);
-    // Create a link element and set its href to the object URL
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "file.xlsx");
-    link.click();
-    // Revoke the object URL after the file has been downloaded
-    window.URL.revokeObjectURL(url);
-  }
-  fetchData();
-},[clickedId])
+// useEffect(()=>{
+//   async function fetchData(){
+//     const response = await fetch(`https://promocodepanelapi.inloya.com/api/Promocode/GetExcelPromocodes?id=${clickedId}`);
+//     const blob = await response.blob();
+//     // Create a new object URL for the blob
+//     const url = window.URL.createObjectURL(blob);
+//     // Create a link element and set its href to the object URL
+//     const link = document.createElement("a");
+//     link.href = url;
+//     link.setAttribute("download", "file.xlsx");
+//     link.click();
+//     // Revoke the object URL after the file has been downloaded
+//     window.URL.revokeObjectURL(url);
+//   }
+//   fetchData();
+// },[clickedId])
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(5);
 
@@ -46,9 +46,20 @@ useEffect(()=>{
   setCurrentPage(1)
 },[data])
 
- const handleExport=(id)=>{
+ const handleExport=async(id)=>{
 
-setClickedId(id)
+  
+    const response = await Apis.getExcelPromocodes(id);
+    console.log(response)
+  
+  const url = window.URL.createObjectURL(new Blob([response.data]));
+  console.log(url)
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', 'file.xlsx');
+  document.body.appendChild(link);
+  link.click();
+  
 
 }
 

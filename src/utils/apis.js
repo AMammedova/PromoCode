@@ -44,6 +44,7 @@ const Logins = axios.create({
   headers: {
     "Content-type": "application/json",
   },
+  
 });
 
 
@@ -76,7 +77,9 @@ export const Apis = {
   },
   getExcelPromocodes: async (id) => {
     const { data } = await Promocode.get(`/GetExcelPromocodes?id=${id}`,
-    
+    {  responseType: 'blob'
+  }
+  
     );
     return data;
   },
