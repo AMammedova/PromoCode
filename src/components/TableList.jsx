@@ -3,13 +3,34 @@ import { useQuery } from "@tanstack/react-query";
 import { Apis } from "../utils/apis";
 import { Pagination, Table } from "flowbite-react";
 import { HiOutlinePencilSquare, HiOutlineTrash } from "react-icons/hi2";
+import axios from "axios";
 const TableList = ({ headers, variant, setState}) => {
-
+const [clickedId,setClickedId]=useState("")
   const {  isError,isLoading, data } = useQuery(
     ["getDataCount"],
     Apis.getAllPromocodeCount
   );
-
+  // const {  refetch: getExcelPromocodes, ...exportData } = useQuery(
+  //   ["getExcelPromocodes"],
+  //   Apis.getExcelPromocodes(clickedId)
+  // );
+ 
+useEffect(()=>{
+  async function fetchData(){
+    const response = await fetch(`https://promocodepanelapi.inloya.com/api/Promocode/GetExcelPromocodes?id=${clickedId}`);
+    const blob = await response.blob();
+    // Create a new object URL for the blob
+    const url = window.URL.createObjectURL(blob);
+    // Create a link element and set its href to the object URL
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "file.xlsx");
+    link.click();
+    // Revoke the object URL after the file has been downloaded
+    window.URL.revokeObjectURL(url);
+  }
+  fetchData();
+},[clickedId])
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(5);
 
@@ -25,8 +46,12 @@ useEffect(()=>{
   setCurrentPage(1)
 },[data])
 
- 
-  console.log(data,"listdata")
+ const handleExport=(id)=>{
+
+setClickedId(id)
+
+}
+
   
   
   return (
@@ -64,7 +89,7 @@ useEffect(()=>{
                   <Table.Cell>{promocodeType}</Table.Cell>
                   <Table.Cell>{source}</Table.Cell>
                   <Table.Cell style={{cursor:"pointer"}}>
-                    ZIP
+                    <button onClick={()=>{handleExport(id)}}>ZIP</button>
                   </Table.Cell>
                 </Table.Row>
               )

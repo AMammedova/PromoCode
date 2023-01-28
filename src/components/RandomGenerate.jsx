@@ -29,7 +29,7 @@ const RandomGenerate = () => {
         return  arr.push({value:item.merchantName,label:item.merchantName});
       })
       setOptionsSelect(arr);
-    },[optionsSelect])
+    },[])
     
   const handleMerchant=({value})=>{
     setMerchant(value)

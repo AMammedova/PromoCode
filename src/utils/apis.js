@@ -74,6 +74,12 @@ export const Apis = {
     const { data } = await Promocode.post(`/AddRandom?count=${count}`,random);
     return data;
   },
+  getExcelPromocodes: async (id) => {
+    const { data } = await Promocode.get(`/GetExcelPromocodes?id=${id}`,
+    
+    );
+    return data;
+  },
   addCostum: async (custom) => {
     const { data } = await Promocode.post("/AddCustom",custom);
     return data;
