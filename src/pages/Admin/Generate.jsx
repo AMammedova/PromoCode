@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Tabs } from "flowbite-react";
 import RandomGenerate from "../../components/RandomGenerate";
 import CustomGenerate from "../../components/CustomGenerate";
+
 const Generate = () => {
   return (
     <div>

@@ -83,6 +83,10 @@ export const Apis = {
     );
     return data;
   },
+  getExcelReport: async (report) => {
+    const { data } = await Promocode.post("/GetExcelReport",report,{responseType: 'blob'});
+    return data;
+  },
   addCostum: async (custom) => {
     const { data } = await Promocode.post("/AddCustom",custom);
     return data;

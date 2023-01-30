@@ -47,9 +47,6 @@ const List = () => {
 
 
   
-  const onPageChange=(props,e)=>{
-
-  }
 
   const headers = [
     "Promocode",

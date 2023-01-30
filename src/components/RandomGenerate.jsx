@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Apis } from "../utils/apis";
 import Select from "react-select";
 const RandomGenerate = () => {
-  const [count, setCount] = useState();
+  const [count, setCount] = useState(0);
   const [description, setDescription] = useState("");
   const [merchant,setMerchant]=useState('');
   const [source,setSource]=useState('');
@@ -29,7 +29,7 @@ const RandomGenerate = () => {
         return  arr.push({value:item.merchantName,label:item.merchantName});
       })
       setOptionsSelect(arr);
-    },[])
+    },[mercdata.data])
     
   const handleMerchant=({value})=>{
     setMerchant(value)

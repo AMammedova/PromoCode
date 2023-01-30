@@ -1,8 +1,16 @@
-import React, { useReducer } from "react";
-import { Button, Checkbox, Label, Modal, TextInput,Radio } from "flowbite-react";
+import React, { useEffect, useReducer, useState } from "react";
+import {
+  Button,
+  Checkbox,
+  Label,
+  Modal,
+  TextInput,
+  Radio,
+} from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi2";
 import { useQuery } from "@tanstack/react-query";
 import { Apis } from "../utils/apis";
+import { toast } from "react-toastify";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -18,50 +26,80 @@ const reducer = (state, action) => {
       return { ...state, password: action.payload };
 
     case "admin":
-      
-      return { ...state, admin: action.payload,merchant:!action.payload,roleName:"Admin"};
-
+      return {
+        ...state,
+        admin: action.payload,
+        merchant: !action.payload,
+        roleName: "Admin",
+      };
 
     case "merchant":
-      return { ...state, merchant: action.payload ,admin:!action.payload,roleName:"Merchant"};
-    
+      return {
+        ...state,
+        merchant: action.payload,
+        admin: !action.payload,
+        roleName: "Merchant",
+      };
+
+    case "editMerchantName":
+      return { ...state, editMerchantName: action.payload };
+    case "editDescription":
+      return { ...state, editDescription: action.payload };
+
+    case "editUsername":
+      return { ...state, editUsername: action.payload };
+
     default:
       return state;
   }
 };
 
-const ModalComponent = ({ show: { show, process }, setShow ,modalItem}) => {
+const ModalComponent = ({ show: { show, process }, setShow, modalItem }) => {
+  console.log(modalItem, "modalitem");
   const [initialState, dispatch] = useReducer(reducer, {
     merchantName: "",
     description: "",
     userName: "",
     password: "",
     admin: true,
-    merchant:false,
-    roleName:"Admin"
+    merchant: false,
+    roleName: "Admin",
+    editMerchantName: "",
+    editDescription: "",
+    editUsername: "",
   });
-
-
-  const { refetch: register, data } = useQuery(
+  useEffect(() => {
+    dispatch({ type: "editMerchantName", payload: modalItem.merchantName });
+    dispatch({ type: "editDescription", payload: modalItem.description });
+    dispatch({ type: "editUsername", payload: modalItem.userName });
+  }, [modalItem]);
+  console.log(initialState, "initial");
+  const [errorMesage,setErrorMessage]=useState("")
+  const { refetch: register,isError,status, data } = useQuery(
     ["register"],
     () =>
+    
       Apis.register({
-        
         userName: initialState.userName,
-        merchantName:initialState.merchantName,
-        description:initialState.description,
-        password:initialState.password,
-        roleName:initialState.roleName
-        
+        merchantName: initialState.merchantName,
+        description: initialState.description,
+        password: initialState.password,
+        roleName: initialState.roleName,
       }),
+     
     {
       enabled: false,
-    }
+      
+    },
+    
   );
+  
+  console.log(errorMesage,"erorrmesajj")
+  console.log(isError,"iserrir")
+  console.log(data?.message,"regdata")
   const { refetch: deleteMerchant, ...deleteData } = useQuery(
-    ["register"],
-    () =>
-      Apis.deleteMerchant(modalItem.id),
+    ["delete"],
+    () => Apis.deleteMerchant(modalItem.id),
     {
       enabled: false,
     }
@@ -70,31 +108,69 @@ const ModalComponent = ({ show: { show, process }, setShow ,modalItem}) => {
     ["editMerchantData"],
     () =>
       Apis.editMerchant({
-        id:modalItem.id,
-        userName: initialState.userName,
-        merchantName:initialState.merchantName,
-        description:initialState.description,
-        password:initialState.password,
-        
-        
+        id: modalItem.id,
+        userName: initialState.editUsername,
+        merchantName: initialState.editMerchantName,
+        description: initialState.editDescription,
+        password: initialState.password,
       }),
     {
       enabled: false,
     }
   );
-  const handleAdd=async()=>{
+  console.log(status,"statuss")
+  const handleAdd = async () => {
     register();
-   
-  }
-  
-   const handleDelete=async()=>{
-    deleteMerchant();
 
-   }
-   const handleUpdate=()=>{
-    editMerchant()
-   }
+
+    if(status==="success"){
+      console.log(data?.success,"suc")
+      toast.success(data?.message[0])
+    
+    
+    }
+    else{
+      toast.error(data?.message[0])
+    }
+    console.log(status,"statuss")
+    console.log(isError,"iserrorstatus")
+    setShow({ show: false, process: "" });
+    setTimeout(() => {
+     
+      // location.reload();
+    
+      
+    }, 1500);
    
+  };
+
+  const handleDelete = async () => {
+    deleteMerchant();
+    setShow({ show: false, process: "" });
+
+    setTimeout(() => {
+      location.reload();
+    }, 400);
+  };
+  const handleUpdate = () => {
+    if (
+      initialState.editMerchantName &&
+      initialState.editUsername &&
+      initialState.editDescription &&
+      initialState.password
+    ) {
+      editMerchant();
+      setShow({ show: false, process: "" });
+      // setTimeout(() => {
+      //   location.reload();
+      // }, 600);
+    } else {
+      console.log(editMerchantData);
+
+      toast.error("Inputs don`t be empty");
+    }
+  };
+
   return (
     <div>
       <Modal
@@ -200,7 +276,10 @@ const ModalComponent = ({ show: { show, process }, setShow ,modalItem}) => {
                 </div>
               </div>
               <div className="flex justify-center">
-                <Button className="!bg-amber-500 hover:!bg-amber-600" onClick={handleAdd}>
+                <Button
+                  className="!bg-amber-500 hover:!bg-amber-600"
+                  onClick={handleAdd}
+                >
                   Log in to your account
                 </Button>
               </div>
@@ -214,12 +293,15 @@ const ModalComponent = ({ show: { show, process }, setShow ,modalItem}) => {
                   <Label value="Merchant Name" />
                 </div>
                 <TextInput
-                  id="merchantName"
+                  id="editMerchantName"
                   placeholder="Merchant Name"
                   required={true}
-                  value={modalItem.merchantName}
+                  value={initialState.editMerchantName}
                   onChange={(e) =>
-                    dispatch({ type: "merchantName", payload: e.target.value })
+                    dispatch({
+                      type: "editMerchantName",
+                      payload: e.target.value,
+                    })
                   }
                 />
               </div>
@@ -228,12 +310,15 @@ const ModalComponent = ({ show: { show, process }, setShow ,modalItem}) => {
                   <Label value="Description" />
                 </div>
                 <TextInput
-                  id="description"
+                  id="editDescription"
                   placeholder="Description"
                   required={true}
-                  value={modalItem.description}
+                  value={initialState.editDescription}
                   onChange={(e) =>
-                    dispatch({ type: "description", payload: e.target.value })
+                    dispatch({
+                      type: "editDescription",
+                      payload: e.target.value,
+                    })
                   }
                 />
               </div>
@@ -242,14 +327,13 @@ const ModalComponent = ({ show: { show, process }, setShow ,modalItem}) => {
                   <Label value="User Name" />
                 </div>
                 <TextInput
-                  id="userName"
+                  id="editUsername"
                   placeholder="User Name"
                   required={true}
-                  value={modalItem.userName}
+                  value={initialState.editUsername}
                   onChange={(e) =>
-                    dispatch({ type: "userName", payload: e.target.value })
+                    dispatch({ type: "editUsername", payload: e.target.value })
                   }
-                  
                 />
               </div>
               <div>
@@ -281,9 +365,11 @@ const ModalComponent = ({ show: { show, process }, setShow ,modalItem}) => {
                 </div> */}
               </div>
               <div className="flex justify-center">
-                <Button className="!bg-amber-500 hover:!bg-amber-600" onClick={handleUpdate}>
-               Update
-                 
+                <Button
+                  className="!bg-amber-500 hover:!bg-amber-600"
+                  onClick={handleUpdate}
+                >
+                  Update
                 </Button>
               </div>
             </div>
@@ -296,12 +382,14 @@ const ModalComponent = ({ show: { show, process }, setShow ,modalItem}) => {
                 Are you sure you want to delete this merchant?
               </h3>
               <div className="flex justify-center gap-4">
-                <Button color="failure"  onClick={handleDelete}>
+                <Button color="failure" onClick={handleDelete}>
                   Yes, I'm sure
                 </Button>
                 <Button
                   color="gray"
-                  onClick={()=>{setShow({ show: false, process: "" })}}
+                  onClick={() => {
+                    setShow({ show: false, process: "" });
+                  }}
                 >
                   No, cancel
                 </Button>

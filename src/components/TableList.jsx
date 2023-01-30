@@ -10,29 +10,9 @@ const [clickedId,setClickedId]=useState("")
     ["getDataCount"],
     Apis.getAllPromocodeCount
   );
-  // const {  refetch: getExcelPromocodes, ...exportData } = useQuery(
-  //   ["getExcelPromocodes"],
-  //   Apis.getExcelPromocodes(clickedId)
-  // );
- 
-// useEffect(()=>{
-//   async function fetchData(){
-//     const response = await fetch(`https://promocodepanelapi.inloya.com/api/Promocode/GetExcelPromocodes?id=${clickedId}`);
-//     const blob = await response.blob();
-//     // Create a new object URL for the blob
-//     const url = window.URL.createObjectURL(blob);
-//     // Create a link element and set its href to the object URL
-//     const link = document.createElement("a");
-//     link.href = url;
-//     link.setAttribute("download", "file.xlsx");
-//     link.click();
-//     // Revoke the object URL after the file has been downloaded
-//     window.URL.revokeObjectURL(url);
-//   }
-//   fetchData();
-// },[clickedId])
+
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(5);
+  const [postsPerPage] = useState(15);
 
 
   const onPageChange=(page)=>{
@@ -46,14 +26,9 @@ useEffect(()=>{
   setCurrentPage(1)
 },[data])
 
- const handleExport=async(id)=>{
-
-  
+ const handleExport=async(id)=>{  
     const response = await Apis.getExcelPromocodes(id);
-    console.log(response)
-  
-  const url = window.URL.createObjectURL(new Blob([response.data]));
-  console.log(url)
+  const url = window.URL.createObjectURL(new Blob([response]));
   const link = document.createElement('a');
   link.href = url;
   link.setAttribute('download', 'file.xlsx');
@@ -110,7 +85,7 @@ useEffect(()=>{
         </Table>
       
       <div className="flex items-center justify-end py-4 text-center">
-      <Pagination currentPage={currentPage} totalPages={Math.ceil(data?.data?.length /5) || 10} onPageChange={onPageChange} />
+      <Pagination currentPage={currentPage} totalPages={Math.ceil(data?.data?.length /15) || 10} onPageChange={onPageChange} />
       </div>
     </div>
   );

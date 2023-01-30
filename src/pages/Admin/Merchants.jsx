@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "../../components/Table";
 import { HiOutlinePlusCircle } from "react-icons/hi2";
 import Modal from "../../components/Modal";
@@ -10,7 +10,7 @@ const Merchants = () => {
   const headers = ["id", "partner", "description"];
   const [modalItem,setModalItem]=useState({})
   const [show, setShow] = useState({ show: false, process: "" });
-  const { isError, isLoading, data } = useQuery(
+  const {isError, isLoading, data } = useQuery(
     ["getDataMerchant"],
     Apis.getAllMerchant
     );
@@ -33,9 +33,9 @@ const Merchants = () => {
           Add
           <HiOutlinePlusCircle size={20} />
         </button>
-        <button className="px-8 py-3 text-gray-600 transition-all border border-gray-400 rounded hover:bg-gray-200 hover:scale-105">
+        {/* <button className="px-8 py-3 text-gray-600 transition-all border border-gray-400 rounded hover:bg-gray-200 hover:scale-105">
           Export
-        </button>
+        </button> */}
       </div>
       <Table setState={setShow} headers={headers} data={data} variant={2} setModalItem={setModalItem}/>
       <Modal show={show} setShow={setShow} modalItem={modalItem}/>

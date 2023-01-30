@@ -16,7 +16,7 @@ const Header = ({ title }) => {
 
   return (
     <div>
-      <div className={styles.Navbar}>
+      <div className={`${styles.Navbar} fixed z-20 w-10/12 bg-gray-100 px-2 `}>
         <div className={styles.NavbarTitle}>
           <h3>{title}</h3>
         </div>

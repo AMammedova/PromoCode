@@ -30,7 +30,7 @@ const CustomGenerate = () => {
         return arr.push({value:item.merchantName,label:item.merchantName});
       })
       setOptionsSelect(arr);
-    },[])
+    },[mercdata.data])
   const handleMerchant=({value})=>{
     setMerchant(value)
   }
