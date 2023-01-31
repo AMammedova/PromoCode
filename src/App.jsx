@@ -16,6 +16,7 @@ import AdminRoute from "./components/AdminRoute";
 import MerchantRoute from "./components/MerchantRoute";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Page404 from "./components/Page404";
 
 const App = () => {
   return (
@@ -100,7 +101,8 @@ const App = () => {
           </Route>
         </Route>
 
-        <Route path="/login" index element={<Login />} />
+        <Route path="/" element={<Login />} />
+        <Route path="*" element={<Page404 />} />
       </Routes>
     </div>
   );
