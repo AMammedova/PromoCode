@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, redirect } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "../../styles/header.module.css";
 import { MdOutlineLogout } from "react-icons/md";
 import Switcher from "./Switcher";
@@ -11,6 +11,7 @@ const Header = ({ title }) => {
 
   const handleLogOut = () => {
     localStorage.clear();
+    console.log(localStorage);
     nav("/login");
     location.reload();
   };
@@ -18,9 +19,7 @@ const Header = ({ title }) => {
 
   return (
     <div>
-      <div
-        className={`${styles.Navbar} fixed z-20 xl:w-9/12 w-7/12 lg:w-8/12 2xl:w-10/12  bg-gray-100 px-2 `}
-      >
+      <div className={`${styles.Navbar} fixed z-20 w-9/12 bg-gray-100 px-2 `}>
         <div className={styles.NavbarTitle}>
           <h3>{title}</h3>
         </div>
