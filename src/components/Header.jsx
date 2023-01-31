@@ -11,7 +11,7 @@ const Header = ({ title }) => {
 
   const handleLogOut = () => {
     localStorage.clear();
-    nav("/login");
+    nav("/");
     location.reload();
   };
   const logName = localStorage.getItem("role");
