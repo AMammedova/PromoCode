@@ -26,25 +26,26 @@ const TableList = ({ headers, variant, setState }) => {
     setCurrentPage(1);
   }, [data]);
 
-  const handleExport = (id) => {
-    console.log(id, "idd");
-    const response = Apis.getExcelPromocodes(id)
-      .then((response) => console.log(response.ok, "responsetstuss"))
-      .catch((error) => {
-        setErrorStatus(error.response.status);
+  const handleExport = async(id) => {
+    try {
+      const res = await Apis.getExcelPromocodes(id).then((response) => {
+        {
+          
+          const url = window.URL.createObjectURL(new Blob([response]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "file.xlsx");
+          document.body.appendChild(link);
+          link.click();
+   
+        }
       });
-    console.log(errorStatus);
-
-    if (errorStatus == 400) {
-      toast.error("Promecode not found!");
-    } else if (errorStatus == 200) {
-      const url = window.URL.createObjectURL(new Blob([response]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "file.xlsx");
-      document.body.appendChild(link);
-      link.click();
+    } catch (err) {
+      console.log(err)
+   toast.error("Promocode not found!")
     }
+
+
   };
 
   return (
