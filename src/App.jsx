@@ -92,8 +92,8 @@ const App = () => {
         exact/>
 </Route>
 </Route>
-        {/* <Route path="/login" element={<Login />} /> */}
-        <Route path="/" element={<Login />} redirect="/login"/>
+        
+        <Route path="/login" element={<Login />}/>
       </Routes>
     </div>
   );

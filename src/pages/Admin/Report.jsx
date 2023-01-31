@@ -5,6 +5,7 @@ import Loading from "../../components/Loading";
 import { useQuery } from "@tanstack/react-query";
 import { Apis } from "../../utils/apis";
 import Select from "react-select";
+import { toast } from "react-toastify";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 const Reports = () => {
   const [optionsSelect, setOptionsSelect] = useState([""]);
@@ -18,13 +19,13 @@ const Reports = () => {
     "source",
     "status",
   ];
-  const { isError, isLoading, data } = useQuery(
+  const { isError, isLoading, data ,error} = useQuery(
     ["getData"],
     Apis.getAllPromocode
   );
   const { ...mercdata } = useQuery(["getDataMerchant"], Apis.getAllMerchant);
   const [filteredData, setFilteredData] = useState([]);
-
+const [errorStatus,setErrorStatus]=useState();
   useEffect(() => {
     setFilteredData(data);
     const arr = [];
@@ -35,19 +36,32 @@ const Reports = () => {
   }, [data]);
 
   const handleExport = async (values) => {
-    const response = await Apis.getExcelReport({
-      sourceId: values.source,
-      statusId: values.status,
-      merchantId: values.merchant,
-      startDate: values.startDate,
-      endDate: values.endDate,
-    });
-    const url = window.URL.createObjectURL(new Blob([response]));
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", "file.xlsx");
-    document.body.appendChild(link);
-    link.click();
+
+    try {
+      const res = await Apis.getExcelReport({
+        sourceId: values.source,
+        statusId: values.status,
+        merchantId: values.merchant,
+        startDate: values.startDate,
+        endDate: values.endDate,
+      }).then((response) => {
+        {
+          
+          const url = window.URL.createObjectURL(new Blob([response]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "file.xlsx");
+          document.body.appendChild(link);
+          link.click();
+   
+        }
+      });
+    } catch (err) {
+      console.log(err)
+   toast.error("Promocode not found!")
+    }
+
+
   };
 
   return isError ? (
@@ -76,7 +90,7 @@ const Reports = () => {
                 startDate: values.startDate,
                 endDate: values.endDate,
               });
-              console.log(values, "values");
+      
               setFilteredData(res);
             } catch (err) {
               setFilteredData("");

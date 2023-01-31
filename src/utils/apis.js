@@ -111,4 +111,23 @@ export const Apis = {
     const { data } = await Logins.post("/Login", login);
     return data;
   },
+  getPromocodesByMerchant:async (merchant) => {
+    const { data } = await Promocode.post("/GetPromocodesByMerchant",merchant);
+
+    return data;
+  },
+  getExcelReportByMerchant: async (report) => {
+    const { data } = await Promocode.post("/GetExcelReportByMerchant",report,{responseType: 'blob'});
+    return data;
+  },
+  getSearch: async (search) => {
+    const { data } = await Promocode.get(`/Search?name=${search}`);
+
+    return data;
+  },
+  getSearchAdmin: async (search) => {
+    const { data } = await Promocode.get(`/SearchForAdmin?name=${search}`);
+
+    return data;
+  },
 };

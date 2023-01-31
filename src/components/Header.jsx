@@ -12,7 +12,9 @@ const Header = ({ title }) => {
   const handleLogOut=()=>{
     localStorage.clear();
     nav("/login");
+    
   }
+const logName=localStorage.getItem("role")
 
   return (
     <div>
@@ -24,7 +26,7 @@ const Header = ({ title }) => {
           <Switcher />
         </div>
         <div className={styles.NavbarAdminLogo}>
-          <span>Admin</span>
+          <span>{logName}</span>
           <span className={styles.LogoAdmin}></span>
           <span>
             <MdOutlineLogout style={{fontSize:"34px",cursor:"pointer"}}  color="#4b5563e6" onClick={handleLogOut} />

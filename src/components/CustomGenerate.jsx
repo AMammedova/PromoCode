@@ -3,6 +3,7 @@ import styles from '../../styles/generate.module.css'
 import { useQuery } from "@tanstack/react-query";
 import { Apis } from "../utils/apis";
 import Select from "react-select";
+import { toast } from 'react-toastify';
 const CustomGenerate = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState("");
@@ -47,10 +48,11 @@ const CustomGenerate = () => {
    
   }
 
-  const { refetch: addCostum, data } = useQuery(
-    ["customGenerate"],
-    () =>
-      Apis.addCostum({
+ 
+  const handleGenerate = async (e) => {
+   
+    try {
+      const res = await Apis.addCostum({
         name: name,
         limit: limit,
         description:description,
@@ -59,14 +61,20 @@ const CustomGenerate = () => {
         startDate:dateStart,
         endDate:dateEnd,
         merchantName:merchant
-      }),
-    {
-      enabled: false,
-    }
-  );
-  const handleGenerate = async (e) => {
+      }).then((response) => {
+        {
+        console.log(response)
+          toast.success(response.message[0])
+          
    
-    addCostum();
+        }
+      });
+    } catch (err) {
+ 
+      console.log(err)
+   toast.error(err?.response?.data?.message[0])
+    }
+
    
   };
   return (

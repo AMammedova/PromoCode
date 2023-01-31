@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer } from "react";
 import {
   Button,
   Checkbox,
@@ -48,7 +48,9 @@ const reducer = (state, action) => {
 
     case "editUsername":
       return { ...state, editUsername: action.payload };
-
+      case "newPassword":
+        return { ...state, newPassword: action.payload };
+  
     default:
       return state;
   }
@@ -67,108 +69,81 @@ const ModalComponent = ({ show: { show, process }, setShow, modalItem }) => {
     editMerchantName: "",
     editDescription: "",
     editUsername: "",
+    newPassword:""
   });
   useEffect(() => {
     dispatch({ type: "editMerchantName", payload: modalItem.merchantName });
     dispatch({ type: "editDescription", payload: modalItem.description });
     dispatch({ type: "editUsername", payload: modalItem.userName });
+    dispatch({ type: "newPassword", payload: modalItem.newPassword });
   }, [modalItem]);
-  console.log(initialState, "initial");
-  const [errorMesage,setErrorMessage]=useState("")
-  const { refetch: register,isError,status, data } = useQuery(
-    ["register"],
-    () =>
-    
-      Apis.register({
+
+  
+
+  
+ 
+  const handleAdd = async () => {
+
+    try {
+      const res = await   Apis.register({
         userName: initialState.userName,
         merchantName: initialState.merchantName,
         description: initialState.description,
         password: initialState.password,
         roleName: initialState.roleName,
-      }),
-     
-    {
-      enabled: false,
-      
-    },
-    
-  );
-  
-  console.log(errorMesage,"erorrmesajj")
-  console.log(isError,"iserrir")
-  console.log(data?.message,"regdata")
-  const { refetch: deleteMerchant, ...deleteData } = useQuery(
-    ["delete"],
-    () => Apis.deleteMerchant(modalItem.id),
-    {
-      enabled: false,
+      }).then((response) => {
+        {
+        console.log(response,"registerresponse");
+        setShow({ show: false, process: "" });
+        location.reload();
+   
+        }
+      });
+    } catch (err) {
+   toast.error(err?.response?.data?.message[0])
     }
-  );
-  const { refetch: editMerchant, ...editMerchantData } = useQuery(
-    ["editMerchantData"],
-    () =>
-      Apis.editMerchant({
+  };
+
+
+  
+
+  const handleDelete = async () => {
+
+    try {
+      const res = await Apis.deleteMerchant(modalItem.id).then((response) => {
+        {
+      
+        setShow({ show: false, process: "" });
+        location.reload();
+   
+        }
+      });
+    } catch (err) {
+   toast.error(err?.response?.data?.message[0])
+    }
+
+
+  };
+  const handleUpdate = async() => {
+    try {
+      const res = await  Apis.editMerchant({
         id: modalItem.id,
         userName: initialState.editUsername,
         merchantName: initialState.editMerchantName,
         description: initialState.editDescription,
-        password: initialState.password,
-      }),
-    {
-      enabled: false,
-    }
-  );
-  console.log(status,"statuss")
-  const handleAdd = async () => {
-    register();
-
-
-    if(status==="success"){
-      console.log(data?.success,"suc")
-      toast.success(data?.message[0])
-    
-    
-    }
-    else{
-      toast.error(data?.message[0])
-    }
-    console.log(status,"statuss")
-    console.log(isError,"iserrorstatus")
-    setShow({ show: false, process: "" });
-    setTimeout(() => {
-     
-      // location.reload();
-    
+        newPassword: initialState.newPassword,
+      }).then((response) => {
+        {
       
-    }, 1500);
+        setShow({ show: false, process: "" });
+        location.reload();
    
-  };
-
-  const handleDelete = async () => {
-    deleteMerchant();
-    setShow({ show: false, process: "" });
-
-    setTimeout(() => {
-      location.reload();
-    }, 400);
-  };
-  const handleUpdate = () => {
-    if (
-      initialState.editMerchantName &&
-      initialState.editUsername &&
-      initialState.editDescription &&
-      initialState.password
-    ) {
-      editMerchant();
-      setShow({ show: false, process: "" });
-      // setTimeout(() => {
-      //   location.reload();
-      // }, 600);
-    } else {
-      console.log(editMerchantData);
-
-      toast.error("Inputs don`t be empty");
+        }
+      });
+    } catch (err) {
+   toast.error(err?.response?.data?.message[0])
     }
+
   };
 
   return (
@@ -345,7 +320,7 @@ const ModalComponent = ({ show: { show, process }, setShow, modalItem }) => {
                   placeholder="Password"
                   required={true}
                   onChange={(e) =>
-                    dispatch({ type: "password", payload: e.target.value })
+                    dispatch({ type: "newPassword", payload: e.target.value })
                   }
                 />
               </div>

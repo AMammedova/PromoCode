@@ -3,6 +3,7 @@ import styles from '../../styles/generate.module.css'
 import { useQuery } from "@tanstack/react-query";
 import { Apis } from "../utils/apis";
 import Select from "react-select";
+import { toast } from 'react-toastify';
 const RandomGenerate = () => {
   const [count, setCount] = useState(0);
   const [description, setDescription] = useState("");
@@ -45,24 +46,29 @@ const RandomGenerate = () => {
     setSource(value);
    
   }
-  const { refetch: addRandom, data } = useQuery(
-    ["randomGenerate"],
-    () =>
-      Apis.addRandom({
+ 
+  const handleGenerate = async (e) => {
+   
+    try {
+      const res = await Apis.addRandom({
         description:description,
         sourceId:source,
         typeId:2,
         startDate:dateStart,
         endDate:dateEnd,
         merchantName:merchant
-      },count),
-    {
-      enabled: false,
-    }
-  );
-  const handleGenerate = async (e) => {
+      },count).then((response) => {
+        {
+          console.log(response,"tryresponse")
+          toast.success(response.message[0])
+          
    
-    addRandom();
+        }
+      });
+    } catch (err) {
+ 
+   toast.error(err?.response?.data?.message[0])
+    }
 
   };
 
