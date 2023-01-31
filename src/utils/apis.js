@@ -44,6 +44,7 @@ const Logins = axios.create({
   headers: {
     "Content-type": "application/json",
   },
+  
 });
 
 
@@ -62,11 +63,28 @@ export const Apis = {
   },
   getAllPromocode: async () => {
     const { data } = await Promocode.get("/All");
-    console.log(data);
+
+    return data;
+  },
+  getAllPromocodeCount: async () => {
+    const { data } = await Promocode.get("/GetPromocodeCounts");
+
     return data;
   },
   addRandom: async (random,count) => {
     const { data } = await Promocode.post(`/AddRandom?count=${count}`,random);
+    return data;
+  },
+  getExcelPromocodes: async (id) => {
+    const { data } = await Promocode.get(`/GetExcelPromocodes?id=${id}`,
+    {  responseType: 'blob'
+  }
+  
+    );
+    return data;
+  },
+  getExcelReport: async (report) => {
+    const { data } = await Promocode.post("/GetExcelReport",report,{responseType: 'blob'});
     return data;
   },
   addCostum: async (custom) => {
@@ -91,6 +109,25 @@ export const Apis = {
   },
   login: async (login) => {
     const { data } = await Logins.post("/Login", login);
+    return data;
+  },
+  getPromocodesByMerchant:async (merchant) => {
+    const { data } = await Promocode.post("/GetPromocodesByMerchant",merchant);
+
+    return data;
+  },
+  getExcelReportByMerchant: async (report) => {
+    const { data } = await Promocode.post("/GetExcelReportByMerchant",report,{responseType: 'blob'});
+    return data;
+  },
+  getSearch: async (search) => {
+    const { data } = await Promocode.get(`/Search?name=${search}`);
+
+    return data;
+  },
+  getSearchAdmin: async (search) => {
+    const { data } = await Promocode.get(`/SearchForAdmin?name=${search}`);
+
     return data;
   },
 };

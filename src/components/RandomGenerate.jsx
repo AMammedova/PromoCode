@@ -1,9 +1,11 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import styles from '../../styles/generate.module.css'
 import { useQuery } from "@tanstack/react-query";
 import { Apis } from "../utils/apis";
+import Select from "react-select";
+import { toast } from 'react-toastify';
 const RandomGenerate = () => {
-  const [count, setCount] = useState();
+  const [count, setCount] = useState(0);
   const [description, setDescription] = useState("");
   const [merchant,setMerchant]=useState('');
   const [source,setSource]=useState('');
@@ -13,28 +15,61 @@ const RandomGenerate = () => {
   const handleDescription=(e)=>setDescription(e.target.value)
   const handleDateStart=(e)=>setDateStart(e.target.value)
   const handleDateEnd=(e)=>setDateEnd(e.target.value)
-  const handleMerchant=(e)=>setMerchant(e.target.value)
-  const handleSource=(e)=>setSource(e.target.value)
+  const [optionsSelect,setOptionsSelect]=useState([""])
+  
+  
 
-  const { refetch: addRandom, data } = useQuery(
-    ["randomGenerate"],
-    () =>
-      Apis.addRandom({
+  const {  ...mercdata } = useQuery(
+    ["getDataMerchant"],
+    Apis.getAllMerchant
+    );
+    useEffect(()=>{
+      const arr=[];
+      mercdata?.data?.data.map((item)=>{
+     
+        return  arr.push({value:item.merchantName,label:item.merchantName});
+      })
+      setOptionsSelect(arr);
+    },[mercdata.data])
+    
+  const handleMerchant=({value})=>{
+    setMerchant(value)
+
+  }
+  const options = [
+    { value: "", label: "Choose an option" },
+    { value: "1", label: "Telegram Bot" },
+    { value: "2", label: "Whatsapp support center" },
+    { value: "3", label: "Easysavings web-site" },
+  ];
+  const handleSource=({value})=>{
+    setSource(value);
+   
+  }
+ 
+  const handleGenerate = async (e) => {
+   
+    try {
+      const res = await Apis.addRandom({
         description:description,
         sourceId:source,
         typeId:2,
         startDate:dateStart,
         endDate:dateEnd,
         merchantName:merchant
-      },count),
-    {
-      enabled: false,
-    }
-  );
-  const handleGenerate = async (e) => {
+      },count).then((response) => {
+        {
+          console.log(response,"tryresponse")
+          toast.success(response.message[0])
+          
    
-    addRandom();
-    console.log(data,"randomgeneratedata")
+        }
+      });
+    } catch (err) {
+ 
+   toast.error(err?.response?.data?.message[0])
+    }
+
   };
 
   return (
@@ -69,23 +104,11 @@ const RandomGenerate = () => {
         <div className={`${styles.RandomItem} grid grid-cols-2 gap-4`}>
             <div className={styles.ItemContainer}>
             <label>Source</label>
-            <select value={source} onChange={handleSource}>
-
-            <option value={null}></option>
-            <option value={1}>Telegram Bot</option>
-          <option value={2}>Whatsapp support center</option>
-          <option value={3}>Easysavings web-site</option>
-</select>
+            <Select options={options} onChange={handleSource} />
             </div>
             <div className={styles.ItemContainer}>
             <label>Merchant</label>
-            <select value={merchant} onChange={handleMerchant}>
-            <option value={null}></option>
-            <option value={1}>Telegram Bot</option>
-          <option value={2}>Whatsapp support center</option>
-          <option value={3}>Easysavings web-site</option>
- 
-</select>
+            <Select options={optionsSelect} onChange={handleMerchant} />
             </div>
            
         </div>

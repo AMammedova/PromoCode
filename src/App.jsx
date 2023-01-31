@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import { redirect } from "react-router-dom";
 import Dashboard from "./pages/Admin/Dashboard";
 import List from "./pages/Admin/List";
 import Generate from "./pages/Admin/Generate";
@@ -13,6 +14,8 @@ import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute"
 import AdminRoute from "./components/AdminRoute";
 import MerchantRoute from "./components/MerchantRoute";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
 
@@ -87,8 +90,10 @@ const App = () => {
             </Layout>
           }
         exact/>
-</Route></Route>
-        <Route path="/login" element={<Login />} />
+</Route>
+</Route>
+        
+        <Route path="/login" element={<Login />}/>
       </Routes>
     </div>
   );

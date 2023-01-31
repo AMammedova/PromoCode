@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../../../styles/report.module.css";
 import TableComponent from "../../components/Table";
 import Loading from "../../components/Loading";
 import { useQuery } from "@tanstack/react-query";
 import { Apis } from "../../utils/apis";
+import Select from "react-select";
+import { toast } from "react-toastify";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 const Reports = () => {
-  const [merchant, setMerchant] = useState("");
-  const [source, setSource] = useState("");
-  const [dateStart, setDateStart] = useState("");
-  const [dateEnd,setDateEnd]=useState("");
-  const [status, setStatus] = useState("");
+  const [optionsSelect, setOptionsSelect] = useState([""]);
+
   const headers = [
     "Promocode",
     "merchant",
@@ -19,11 +19,51 @@ const Reports = () => {
     "source",
     "status",
   ];
-  const { isError, isLoading, data } = useQuery(
+  const { isError, isLoading, data ,error} = useQuery(
     ["getData"],
     Apis.getAllPromocode
-    
   );
+  const { ...mercdata } = useQuery(["getDataMerchant"], Apis.getAllMerchant);
+  const [filteredData, setFilteredData] = useState([]);
+const [errorStatus,setErrorStatus]=useState();
+  useEffect(() => {
+    setFilteredData(data);
+    const arr = [];
+    mercdata?.data?.data.map((item) => {
+      return arr.push({ value: item.id, label: item.merchantName });
+    });
+    setOptionsSelect(arr);
+  }, [data]);
+
+  const handleExport = async (values) => {
+
+    try {
+      const res = await Apis.getExcelReport({
+        sourceId: values.source,
+        statusId: values.status,
+        merchantId: values.merchant,
+        startDate: values.startDate,
+        endDate: values.endDate,
+      }).then((response) => {
+        {
+          
+          const url = window.URL.createObjectURL(new Blob([response]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "file.xlsx");
+          document.body.appendChild(link);
+          link.click();
+   
+        }
+      });
+    } catch (err) {
+      console.log(err)
+   toast.error("Promocode not found!")
+    }
+
+
+  };
+
   return isError ? (
     <div>Error</div>
   ) : isLoading ? (
@@ -33,72 +73,106 @@ const Reports = () => {
   ) : (
     <div className="space-y-8">
       <div className="flex justify-between">
-        <div className="flex-1">
-          <div className="grid max-w-xl grid-cols-2 gap-4 py-5">
-            <div className="flex items-center justify-between gap-2">
-              <label className="whitespace-nowrap">Sort by Source</label>
-              <select
-                value={source}
-                onChange={(e) => setSource(e.target.value)}
-              >
-                <option value="US">Telegram Bot</option>
-              </select>
-            </div>
-            <div className="flex items-center justify-between gap-2">
-              <label className="whitespace-nowrap">Sort by Merchant</label>
-              <select
-                value={merchant}
-                onChange={(e) => setMerchant(e.target.value)}
-              >
-                <option value="US">FRYDAY</option>
-              </select>
-            </div>
-          </div>
-          <div className="grid max-w-xl grid-cols-2 gap-4 py-5">
-            <div className="flex items-center justify-between gap-2">
+        <Formik
+          initialValues={{
+            source: null,
+            merchant: null,
+            startDate: null,
+            endDate: null,
+            status: null,
+          }}
+          onSubmit={async (values) => {
+            try {
+              const res = await Apis.filter({
+                sourceId: values.source,
+                statusId: values.status,
+                merchantId: values.merchant,
+                startDate: values.startDate,
+                endDate: values.endDate,
+              });
+      
+              setFilteredData(res);
+            } catch (err) {
+              setFilteredData("");
+            }
+          }}
+        >
+          {({ setFieldValue, values }) => (
+            <Form>
+              <div className="grid grid-cols-2 gap-6 mb-4">
+                <div className="flex items-center justify-between gap-2">
+                  <label className="whitespace-nowrap">Sort by Source</label>
+                  <Field as="select" name="source">
+                    <option value="">Select an option</option>
+                    <option value="1">Telegram Bot</option>
+                    <option value="2">Whatsapp support center</option>
+                    <option value="3">Easysavings web-site</option>
+                  </Field>
+                  {values.source === "" ? setFieldValue("source", null) : null}
+                </div>
+                <ErrorMessage name="source" component="div" />
+                <div className="flex items-center justify-between gap-2">
+                  <label className="whitespace-nowrap">Sort by Merchant</label>
+                  <Field as="select" name="merchant">
+                    <option value="">Select an option</option>
+                    {optionsSelect?.map(({ value, label }) => (
+                      <option value={value}>{label}</option>
+                    ))}
+                  </Field>
+                  {values.merchant === ""
+                    ? setFieldValue("merchant", null)
+                    : null}
+                </div>
+                <ErrorMessage name="merchant" component="div" />
+                <div className="flex items-center justify-between gap-2">
+                  <label className="whitespace-nowrap">Sort by StartDate</label>
+                  <Field
+                    onChange={(e) => setFieldValue("startDate", e.target.value)}
+                    value={values.startDate}
+                    type="date"
+                    name="dateStart"
+                  />
+                </div>
+                <ErrorMessage name="dateStart" component="div" />
+                <div className="flex items-center justify-between gap-2">
+                  <label className="whitespace-nowrap">Sort by EndDate</label>
+                  <Field
+                    onChange={(e) => setFieldValue("endDate", e.target.value)}
+                    value={values.endDate}
+                    type="date"
+                    name="dateEnd"
+                  />
+                </div>
 
-            <label className="whitespace-nowrap">Sort by DateEnd</label>
-              <input
-                value={dateEnd}
-                onChange={(e) => setDateEnd(e.target.value)}
-                type='date'
+                <ErrorMessage name="dateEnd" component="div" />
+                <div className="flex items-center justify-between gap-2">
+                  <label className="whitespace-nowrap">Sort by Status</label>
+                  <Field as="select" name="status">
+                    <option value="">Select an option</option>
+                    <option value="1">Used</option>
+                    <option value="2">Unused</option>
+                  </Field>
+                  {values.status === "" ? setFieldValue("status", null) : null}
+                </div>
+                <ErrorMessage name="select4" component="div" />
+              </div>
+              <button
+                type="submit"
+                className="px-12 py-3 bg-amber-500 rounded max-w-sm"
               >
-                
-              </input>
-             
-            </div>
-            <div className="flex items-center justify-between gap-2">
-              <label className="whitespace-nowrap">Sort by Date</label>
-              <input
-                value={dateStart}
-                onChange={(e) => setDateStart(e.target.value)}
-                type='date'
+                Apply
+              </button>
+              <button
+                className="px-8 py-3 ml-3 text-gray-600 transition-all border border-gray-400 rounded hover:bg-gray-200 hover:scale-105"
+                onClick={() => handleExport(values)}
               >
-               
-              </input>
-            </div>
-          </div>
-          <div className="grid max-w-xl grid-cols-2 gap-4 py-5">
-         
-            <div className="flex items-center justify-between gap-2">
-            <label className="whitespace-nowrap">Sort by Status</label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <option value="US">Used</option>
-              </select>
-             
-            </div>
-          </div>
-        </div>
-        <div className="">
-          <button className="px-8 py-3 text-gray-600 transition-all border border-gray-400 rounded hover:bg-gray-200 hover:scale-105">
-            Export
-          </button>
-        </div>
+                Export
+              </button>
+            </Form>
+          )}
+        </Formik>
       </div>
-      <TableComponent headers={headers} data={data} variant={1} />
+      <TableComponent headers={headers} data={filteredData} variant={1} />
     </div>
   );
 };

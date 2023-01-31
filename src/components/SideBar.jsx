@@ -79,7 +79,8 @@ const SideBar = ({ variant }) => {
 
   return (
     <div className="relative min-h-screen pl-4 bg-white shadow-sm text-gray-600/90 w-72">
-      <div className="flex gap-3 py-7">
+   <div className="fixed">
+   <div className="flex gap-3 py-7">
         <div className="flex items-center justify-center">
           <img className="w-12" src={logo} alt="" />
         </div>
@@ -139,6 +140,7 @@ const SideBar = ({ variant }) => {
             ))
           : ""}
       </div>
+   </div>
     </div>
   );
 };

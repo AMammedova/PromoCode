@@ -4,7 +4,7 @@ import { HiOutlinePencilSquare, HiOutlineTrash } from "react-icons/hi2";
 const TableComponent = ({ headers, variant, setState, data,setModalItem }) => {
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(5);
+  const [postsPerPage] = useState(15);
 
 
   const onPageChange=(page)=>{
@@ -13,7 +13,7 @@ const TableComponent = ({ headers, variant, setState, data,setModalItem }) => {
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const currentPosts = data?.data?.slice(indexOfFirstPost, indexOfLastPost);
-console.log(data?.data)
+
 useEffect(()=>{
   setCurrentPage(1)
 },[data])
@@ -119,7 +119,7 @@ useEffect(()=>{
         ""
       )}
       <div className="flex items-center justify-end py-4 text-center">
-        <Pagination currentPage={currentPage} totalPages={Math.ceil(data?.data?.length /5) || 10} onPageChange={onPageChange} />
+        <Pagination currentPage={currentPage} totalPages={Math.ceil(data?.data?.length /15) || 10} onPageChange={onPageChange} />
       </div>
     </div>
   );
