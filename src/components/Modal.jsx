@@ -48,16 +48,15 @@ const reducer = (state, action) => {
 
     case "editUsername":
       return { ...state, editUsername: action.payload };
-      case "newPassword":
-        return { ...state, newPassword: action.payload };
-  
+    case "newPassword":
+      return { ...state, newPassword: action.payload };
+
     default:
       return state;
   }
 };
 
 const ModalComponent = ({ show: { show, process }, setShow, modalItem }) => {
-  console.log(modalItem, "modalitem");
   const [initialState, dispatch] = useReducer(reducer, {
     merchantName: "",
     description: "",
@@ -69,7 +68,7 @@ const ModalComponent = ({ show: { show, process }, setShow, modalItem }) => {
     editMerchantName: "",
     editDescription: "",
     editUsername: "",
-    newPassword:""
+    newPassword: "",
   });
   useEffect(() => {
     dispatch({ type: "editMerchantName", payload: modalItem.merchantName });
@@ -78,14 +77,9 @@ const ModalComponent = ({ show: { show, process }, setShow, modalItem }) => {
     dispatch({ type: "newPassword", payload: modalItem.newPassword });
   }, [modalItem]);
 
-  
-
-  
- 
   const handleAdd = async () => {
-
     try {
-      const res = await   Apis.register({
+      const res = await Apis.register({
         userName: initialState.userName,
         merchantName: initialState.merchantName,
         description: initialState.description,
@@ -93,40 +87,30 @@ const ModalComponent = ({ show: { show, process }, setShow, modalItem }) => {
         roleName: initialState.roleName,
       }).then((response) => {
         {
-        console.log(response,"registerresponse");
-        setShow({ show: false, process: "" });
-        location.reload();
-   
+          setShow({ show: false, process: "" });
+          location.reload();
         }
       });
     } catch (err) {
-   toast.error(err?.response?.data?.message[0])
+      toast.error(err?.response?.data?.message[0]);
     }
   };
 
-
-  
-
   const handleDelete = async () => {
-
     try {
       const res = await Apis.deleteMerchant(modalItem.id).then((response) => {
         {
-      
-        setShow({ show: false, process: "" });
-        location.reload();
-   
+          setShow({ show: false, process: "" });
+          location.reload();
         }
       });
     } catch (err) {
-   toast.error(err?.response?.data?.message[0])
+      toast.error(err?.response?.data?.message[0]);
     }
-
-
   };
-  const handleUpdate = async() => {
+  const handleUpdate = async () => {
     try {
-      const res = await  Apis.editMerchant({
+      const res = await Apis.editMerchant({
         id: modalItem.id,
         userName: initialState.editUsername,
         merchantName: initialState.editMerchantName,
@@ -134,16 +118,13 @@ const ModalComponent = ({ show: { show, process }, setShow, modalItem }) => {
         newPassword: initialState.newPassword,
       }).then((response) => {
         {
-      
-        setShow({ show: false, process: "" });
-        location.reload();
-   
+          setShow({ show: false, process: "" });
+          location.reload();
         }
       });
     } catch (err) {
-   toast.error(err?.response?.data?.message[0])
+      toast.error(err?.response?.data?.message[0]);
     }
-
   };
 
   return (

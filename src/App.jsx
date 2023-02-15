@@ -21,7 +21,7 @@ import Page404 from "./components/Page404";
 const App = () => {
   return (
     <div className="flex min-h-screen font-medium text-gray-900 font-inter bg-gray-50">
-      <Routes>
+     <Routes>
         <Route element={<ProtectedRoute />}>
           <Route element={<AdminRoute />}>
             <Route

@@ -5,20 +5,57 @@ import Modal from "../../components/Modal";
 import { useQuery } from "@tanstack/react-query";
 import { Apis } from "../../utils/apis";
 import Loading from "../../components/Loading";
-
+import { Pagination} from "flowbite-react";
 const Merchants = () => {
   const headers = ["id", "partner", "description"];
   const [modalItem,setModalItem]=useState({})
   const [show, setShow] = useState({ show: false, process: "" });
-  const {isError, isLoading, data } = useQuery(
-    ["getDataMerchant"],
-    Apis.getAllMerchant
-    );
+  const [filteredData,setFilteredData]=useState([])
+  const [totalPages,setTotalPages]=useState(0)
+  const [loading, setLoading] = useState(false);
+  const [isError,setIsError]=useState(false)
  
+  const [currentPage, setCurrentPage] = useState(1);
+
+useEffect(()=>{
+  setLoading(true);
+  
+  try{
+    const res= Apis.getAllMerchant().then((response)=>{setFilteredData(response?.data);setTotalPages(response?.data?.totalPages);setLoading(false);});
+
+  }catch(err){
+    console.log(err)
+  }
+  
+},[])
+
+
+  const onPageChange=async(page)=>{
+    setLoading(true);
+    setCurrentPage(page)
+    try {
+      const res = await Apis.getAllMerchantIndex(page).then((response) => {
+        {
+          setLoading(false);
+          setFilteredData(response?.data)
+       
+        
+          
+   
+        }
+      });
+    } catch (err) {
+      setIsError(true)
+   toast.error(err?.response?.data?.message[0])
+    }
+
+      
+  }
+   
  
   return isError ? (
     <div>Error</div>
-  ) : isLoading ? (
+  ) : loading ? (
     <div>
       <Loading />
     </div>
@@ -37,8 +74,11 @@ const Merchants = () => {
           Export
         </button> */}
       </div>
-      <Table setState={setShow} headers={headers} data={data} variant={2} setModalItem={setModalItem}/>
+      <Table setState={setShow} headers={headers} data={filteredData} variant={2} setModalItem={setModalItem}/>
       <Modal show={show} setShow={setShow} modalItem={modalItem}/>
+      <div className="flex items-center justify-end py-4 text-center">
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={onPageChange} />
+      </div>
     </div>
   );
 };

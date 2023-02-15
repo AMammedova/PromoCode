@@ -42,12 +42,12 @@ const SideBar = ({ variant }) => {
   ];
 
   const linkMerchants = [
-    {
-      id: 1,
-      name: "Dashboard",
-      icon: dashboarIcon,
-      link: "/",
-    },
+    // {
+    //   id: 1,
+    //   name: "Dashboard",
+    //   icon: dashboarIcon,
+    //   link: "/",
+    // },
     {
       id: 2,
       name: "Search",

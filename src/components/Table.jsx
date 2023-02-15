@@ -1,22 +1,13 @@
-import React,{useState,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Pagination, Table } from "flowbite-react";
 import { HiOutlinePencilSquare, HiOutlineTrash } from "react-icons/hi2";
-const TableComponent = ({ headers, variant, setState, data,setModalItem }) => {
+import { format } from "date-fns";
+const TableComponent = ({ headers, variant, setState, data, setModalItem }) => {
+  const [currentPosts, setCurrentPosts] = useState();
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(15);
-
-
-  const onPageChange=(page)=>{
-      setCurrentPage(page)
-  }
-    const indexOfLastPost = currentPage * postsPerPage;
-    const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = data?.data?.slice(indexOfFirstPost, indexOfLastPost);
-
-useEffect(()=>{
-  setCurrentPage(1)
-},[data])
+  useEffect(() => {
+    setCurrentPosts(data?.items);
+  }, [data]);
   return (
     <div className="w-full">
       {variant === 1 ? (
@@ -29,38 +20,38 @@ useEffect(()=>{
             ))}
           </Table.Head>
           <Table.Body className="divide-y">
-            {currentPosts?.map(
-              ({
-                merchantName,
-                name,
-                id,
-                description,
-                startDate,
-                endDate,
-                isUsed,
-                sourceName,
-              }) => (
-                <Table.Row
-                  key={id}
-                  className="font-normal bg-white dark:border-gray-700 dark:bg-gray-800"
+            {currentPosts?.map((item, id) => (
+              <Table.Row
+                key={id}
+                className="font-normal bg-white dark:border-gray-700 dark:bg-gray-800"
+              >
+                <Table.Cell>{item.name}</Table.Cell>
+                <Table.Cell>{item.merchantName}</Table.Cell>
+                <Table.Cell className="text-blue-700">
+                  {item.description}
+                </Table.Cell>
+                <Table.Cell>
+                  {item.startDate && (
+                    <span>
+                      {format(new Date(item.startDate), "MMMM d, yyyy h:mm a")}
+                    </span>
+                  )}
+                </Table.Cell>
+                <Table.Cell>
+                  {item.endDate && (
+                    <span>
+                      {format(new Date(item.endDate), "MMMM d, yyyy h:mm a")}
+                    </span>
+                  )}{" "}
+                </Table.Cell>
+                <Table.Cell>{item.sourceName}</Table.Cell>
+                <Table.Cell
+                  className={` ${item.statusName && "text-green-400"}`}
                 >
-                  <Table.Cell>{name}</Table.Cell>
-                  <Table.Cell>{merchantName}</Table.Cell>
-                  <Table.Cell className="text-blue-700">
-                    {description}
-                  </Table.Cell>
-                  <Table.Cell>{startDate}</Table.Cell>
-                  <Table.Cell>{endDate}</Table.Cell>
-                  <Table.Cell>{sourceName}</Table.Cell>
-                  <Table.Cell
-                    className={` ${isUsed && "text-green-400"}`}
-                  >
-                    {isUsed ? "USED" : "UNUSED"}
-                  </Table.Cell>
-                </Table.Row>
-              )
-            )}
-            
+                  {item.statusName ? "USED" : "UNUSED"}
+                </Table.Cell>
+              </Table.Row>
+            ))}
           </Table.Body>
         </Table>
       ) : variant === 2 ? (
@@ -80,47 +71,52 @@ useEffect(()=>{
           </Table.Head>
           <Table.Body className="divide-y">
             {currentPosts?.map(
-              
-              ({
-                id,
-                merchantName,
-                description,
-                userName
-
-                
-              })=> (
-              <Table.Row key={id} className="font-normal bg-white">
-                <Table.Cell>{id}</Table.Cell>
-                <Table.Cell>{merchantName}</Table.Cell>
-                <Table.Cell>{description}</Table.Cell>
-                <Table.Cell>
-                  <HiOutlinePencilSquare
-                    onClick={() =>{ setState({ show: true, process: "onEdit" });setModalItem({id,merchantName,description,userName
-                    })}}
-                    className="cursor-pointer hover:stroke-gray-900"
-                    size={20}
-                  />
-                </Table.Cell>
-                <Table.Cell>
-                  <HiOutlineTrash
-                    onClick={() =>
-                     { setState({ show: true, process: "onDelete" });setModalItem({id,merchantName,description,userName
-                     })}
-                    }
-                    className="cursor-pointer hover:stroke-gray-900"
-                    size={20}
-                  />
-                </Table.Cell>
-              </Table.Row>
-            ))}
+              ({ id, merchantName, description, userName }) => (
+                <Table.Row key={id} className="font-normal bg-white">
+                  <Table.Cell>{id}</Table.Cell>
+                  <Table.Cell>{merchantName}</Table.Cell>
+                  <Table.Cell>{description}</Table.Cell>
+                  <Table.Cell>
+                    <HiOutlinePencilSquare
+                      onClick={() => {
+                        setState({ show: true, process: "onEdit" });
+                        setModalItem({
+                          id,
+                          merchantName,
+                          description,
+                          userName,
+                        });
+                      }}
+                      className="cursor-pointer hover:stroke-gray-900"
+                      size={20}
+                    />
+                  </Table.Cell>
+                  <Table.Cell>
+                    <HiOutlineTrash
+                      onClick={() => {
+                        setState({ show: true, process: "onDelete" });
+                        setModalItem({
+                          id,
+                          merchantName,
+                          description,
+                          userName,
+                        });
+                      }}
+                      className="cursor-pointer hover:stroke-gray-900"
+                      size={20}
+                    />
+                  </Table.Cell>
+                </Table.Row>
+              )
+            )}
           </Table.Body>
         </Table>
       ) : (
         ""
       )}
-      <div className="flex items-center justify-end py-4 text-center">
-        <Pagination currentPage={currentPage} totalPages={Math.ceil(data?.data?.length /15) || 10} onPageChange={onPageChange} />
-      </div>
+      {/* <div className="flex items-center justify-end py-4 text-center">
+        <Pagination currentPage={currentPage} totalPages={34} onPageChange={onPageChange} />
+      </div> */}
     </div>
   );
 };
