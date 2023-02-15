@@ -11,9 +11,7 @@ const TableList = ({ headers, data }) => {
     setCurrentPosts(data?.items);
   }, [data]);
 
-  //export
-
-  const handleExport = async (id) => {
+  const handleExport = async(id) => {
     try {
       const res = await Apis.getExcelPromocodes(id).then((response) => {
         {
@@ -22,13 +20,15 @@ const TableList = ({ headers, data }) => {
           link.href = url;
           link.setAttribute("download", "file.xlsx");
           document.body.appendChild(link);
-          link.click();
+          link.click();   
         }
       });
     } catch (err) {
-      console.log(err);
-      toast.error("Promocode not found!");
+      console.log(err)
+   toast.error("Promocode not found!")
     }
+
+
   };
 
   return (
