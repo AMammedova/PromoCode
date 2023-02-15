@@ -15,7 +15,7 @@ const Header = ({ title }) => {
 
     // location.reload();
 
-    location.reload();
+   
 
   };
   const logName = localStorage.getItem("role");
