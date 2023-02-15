@@ -12,7 +12,11 @@ const Header = ({ title }) => {
   const handleLogOut = () => {
     localStorage.clear();
     nav("/");
+
     // location.reload();
+
+    location.reload();
+
   };
   const logName = localStorage.getItem("role");
 
