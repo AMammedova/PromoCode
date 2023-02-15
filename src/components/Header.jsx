@@ -11,15 +11,15 @@ const Header = ({ title }) => {
 
   const handleLogOut = () => {
     localStorage.clear();
-    nav("/login");
-    location.reload();
+    nav("/");
+    // location.reload();
   };
   const logName = localStorage.getItem("role");
 
   return (
     <div>
       <div
-        className={`${styles.Navbar} fixed z-20 xl:w-9/12 w-7/12 lg:w-8/12 2xl:w-10/12  bg-gray-100 px-2 `}
+        className={`${styles.Navbar} fixed z-20 xl:w-9/12 w-7/12 lg:w-8/12 2xl:w-9/12  bg-gray-100 px-2 `}
       >
         <div className={styles.NavbarTitle}>
           <h3>{title}</h3>

@@ -2,57 +2,59 @@ import { useState, useEffect, useContext } from "react";
 import frame from "../assets/images/login-frame.png";
 import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 import AuthContext from "../api/context/AuthProvider";
-import { useQuery } from "@tanstack/react-query";
-import { Apis,setToken } from "../utils/apis";
+import { Spinner } from "flowbite-react";
+import { Apis, setToken } from "../utils/apis";
 import jwt_decode from "jwt-decode";
-import { redirect,useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const Login = () => {
   const nav = useNavigate();
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
-  const { refetch: login, data } = useQuery(
-    ["login"],
-    () =>
-      Apis.login({
-        userName: userName,
-        password: password,
-      }),
-    {
-      enabled: false,
-    }
-  );
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    login();
-  };
+    const [loading, setLoading] = useState(false);
+
   const handleuserName = (e) => setUserName(e.target.value);
 
   const handlePassword = (e) => setPassword(e.target.value);
 
   const handlePasswordShow = () => setShow(!show);
 
-  useEffect(() => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+ setLoading(true);
+    try {
+      const res = await Apis.login({
+        userName: userName,
+        password: password,
+      }).then((data) => {
+        {
+             setLoading(false);
+          if (data) {
 
-    if (data) {
-      const token = data.data.token;
-      const decoded = jwt_decode(token);
-      
-      setToken(token)
+            const token = data.data.token;
+            const decoded = jwt_decode(token);
 
-      const role = Object.entries(decoded)[3][1];
+            setToken(token);
 
-      localStorage.clear();
-      localStorage.setItem("user-token", token);
-      localStorage.setItem("role", role);
-  
-      if (token && role) {
-        role === "Admin" && nav("/dashboard");
-        role === "Merchant" && nav("/merchant");
-      }
+            const role = Object.entries(decoded)[3][1];
 
+            localStorage.clear();
+            localStorage.setItem("user-token", token);
+            localStorage.setItem("role", role);
+
+            if (token && role) {
+              role === "Admin" && nav("/dashboard");
+              role === "Merchant" && nav("/merchant/search");
+            }
+          }
+        }
+      });
+    } catch (err) {
+    
+      toast.error(err?.response?.data?.message[0]);
     }
-  }, [data]);
+  };
 
   return (
     <div className="w-full min-h-screen">
@@ -110,10 +112,19 @@ const Login = () => {
                   </div>
                 </div>
               </div>
+{loading ? (
+    <button className="w-full text-xl rounded-md submit text-gray-50 bg-gradient-to-r mt-12 py-3 hover:scale-105 transition-all from-[#F25019] to-[#F79E1B]">
+          
+          <Spinner/>
+              </button>
 
-              <button className="w-full text-xl rounded-md submit text-gray-50 bg-gradient-to-r mt-12 py-3 hover:scale-105 transition-all from-[#F25019] to-[#F79E1B]">
+      
+      ) : (
+        <button className="w-full text-xl rounded-md submit text-gray-50 bg-gradient-to-r mt-12 py-3 hover:scale-105 transition-all from-[#F25019] to-[#F79E1B]">
                 Sign in
               </button>
+      )}
+             
             </form>
           </div>
         </div>

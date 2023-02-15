@@ -93,7 +93,7 @@ const App = () => {
 </Route>
 </Route>
         
-        <Route path="/login" element={<Login />}/>
+        <Route path="/" element={<Login />}/>
       </Routes>
     </div>
   );

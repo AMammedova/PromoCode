@@ -2,48 +2,32 @@ import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Apis } from "../utils/apis";
 import { Pagination, Table } from "flowbite-react";
-import { HiOutlinePencilSquare, HiOutlineTrash } from "react-icons/hi2";
-import axios from "axios";
+import { format } from 'date-fns';
 import { toast } from "react-toastify";
-const TableList = ({ headers, variant, setState }) => {
-  const [errorStatus, setErrorStatus] = useState();
-  const { isError, isLoading, data } = useQuery(
-    ["getDataCount"],
-    Apis.getAllPromocodeCount
-  );
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(15);
-
-  const onPageChange = (page) => {
-    setCurrentPage(page);
-  };
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = data?.data?.slice(indexOfFirstPost, indexOfLastPost);
-
+const TableList = ({ headers, data }) => {
+  const [currentPosts, setCurrentPosts] = useState();
+ 
   useEffect(() => {
-    setCurrentPage(1);
+    setCurrentPosts(data?.items);
   }, [data]);
 
-  const handleExport = (id) => {
-    console.log(id, "idd");
-    const response = Apis.getExcelPromocodes(id)
-      .then((response) => console.log(response.ok, "responsetstuss"))
-      .catch((error) => {
-        setErrorStatus(error.response.status);
-      });
-    console.log(errorStatus);
+  //export
 
-    if (errorStatus == 400) {
-      toast.error("Promecode not found!");
-    } else if (errorStatus == 200) {
-      const url = window.URL.createObjectURL(new Blob([response]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "file.xlsx");
-      document.body.appendChild(link);
-      link.click();
+  const handleExport = async (id) => {
+    try {
+      const res = await Apis.getExcelPromocodes(id).then((response) => {
+        {
+          const url = window.URL.createObjectURL(new Blob([response]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "file.xlsx");
+          document.body.appendChild(link);
+          link.click();
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      toast.error("Promocode not found!");
     }
   };
 
@@ -63,7 +47,11 @@ const TableList = ({ headers, variant, setState }) => {
               key={item.id}
               className="font-normal bg-white dark:border-gray-700 dark:bg-gray-800"
             >
-              <Table.Cell>{item.promocodeType.createdDate}</Table.Cell>
+              <Table.Cell>
+                {item.promocodeType.createdDate &&
+                <span>{format(new Date(item.promocodeType.createdDate), 'MMMM d, yyyy h:mm a')}</span>
+              }  
+             </Table.Cell>
               <Table.Cell>{item.merchantName}</Table.Cell>
               <Table.Cell className="text-blue-700">
                 {item.description}
@@ -84,14 +72,6 @@ const TableList = ({ headers, variant, setState }) => {
           ))}
         </Table.Body>
       </Table>
-
-      <div className="flex items-center justify-end py-4 text-center">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={Math.ceil(data?.data?.length / 15) || 10}
-          onPageChange={onPageChange}
-        />
-      </div>
     </div>
   );
 };

@@ -1,25 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Apis } from "../utils/apis";
 import { Pagination, Table } from "flowbite-react";
-import { HiOutlinePencilSquare, HiOutlineTrash } from "react-icons/hi2";
-import axios from "axios";
-import { toast } from "react-toastify";
+import { format } from 'date-fns';
 const TableMerchant = ({ headers, data }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(15);
+  const [currentPosts,setCurrentPosts]=useState();
 
-  const onPageChange = (page) => {
-    setCurrentPage(page);
-  };
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = data?.slice(indexOfFirstPost, indexOfLastPost);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [data]);
-
+useEffect(()=>{
+    setCurrentPosts(data?.items)
+  },[data])
   return (
     <div className="w-full">
       <Table hoverable={true}>
@@ -40,8 +27,12 @@ const TableMerchant = ({ headers, data }) => {
               <Table.Cell className="text-blue-700">
                 {item.description}
               </Table.Cell>
-              <Table.Cell>{item.startDate}</Table.Cell>
-              <Table.Cell>{item.endDate}</Table.Cell>
+              <Table.Cell>  {item.startDate &&
+                <span>{format(new Date(item.startDate), 'MMMM d, yyyy h:mm a')}</span>
+              }   </Table.Cell>
+              <Table.Cell>{item.endDate &&
+                <span>{format(new Date(item.endDate), 'MMMM d, yyyy h:mm a')}</span>
+              }  </Table.Cell>
               <Table.Cell>{item.sourceName}</Table.Cell>
               <Table.Cell>{item.statusName}</Table.Cell>
             </Table.Row>
@@ -49,13 +40,7 @@ const TableMerchant = ({ headers, data }) => {
         </Table.Body>
       </Table>
 
-      <div className="flex items-center justify-end py-4 text-center">
-        <Pagination
-          currentPage={currentPage}
-          totalPages={Math.ceil(data?.length / 15) || 10}
-          onPageChange={onPageChange}
-        />
-      </div>
+  
     </div>
   );
 };

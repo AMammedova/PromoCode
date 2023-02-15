@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const token = import.meta.env.VITE_TOKEN;
-let Promocode,Merchant
+let Promocode, Merchant;
 
 Promocode = axios.create({
   baseURL: "https://promocodepanelapi.inloya.com/api/Promocode",
@@ -9,52 +9,57 @@ Promocode = axios.create({
     Authorization: `Bearer ${localStorage.getItem("user-token")}`,
 
     "Content-type": "application/json",
-  }});
+  },
+});
 
-  Merchant = axios.create({
-    baseURL: "https://promocodepanelapi.inloya.com/api/Merchant",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("user-token")}`,
-  
-      "Content-type": "application/json",
-    },
-  })
+Merchant = axios.create({
+  baseURL: "https://promocodepanelapi.inloya.com/api/Merchant",
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("user-token")}`,
+
+    "Content-type": "application/json",
+  },
+});
 
 export const setToken = (token) => {
   Promocode = axios.create({
-  baseURL: "https://promocodepanelapi.inloya.com/api/Promocode",
-  headers: {
-    Authorization: `Bearer ${token}`,
+    baseURL: "https://promocodepanelapi.inloya.com/api/Promocode",
+    headers: {
+      Authorization: `Bearer ${token}`,
 
-    "Content-type": "application/json",
-  }});
+      "Content-type": "application/json",
+    },
+  });
 
   Merchant = axios.create({
     baseURL: "https://promocodepanelapi.inloya.com/api/Merchant",
     headers: {
       Authorization: `Bearer ${token}`,
-  
+
       "Content-type": "application/json",
     },
-  })
-}
+  });
+};
 
 const Logins = axios.create({
   baseURL: "https://promocodepanelapi.inloya.com/api/Users",
   headers: {
     "Content-type": "application/json",
   },
-  
 });
-
 
 export const Apis = {
   getAllMerchant: async () => {
     const { data } = await Merchant.get("/All");
     return data;
   },
+  getAllMerchantIndex: async (page) => {
+    const { data } = await Merchant.get(`/All?PageIndex=${page}`);
+
+    return data;
+  },
   editMerchant: async (editMerchant) => {
-    const { data } = await Merchant.post("/Edit",editMerchant);
+    const { data } = await Merchant.post("/Edit", editMerchant);
     return data;
   },
   deleteMerchant: async (merchantId) => {
@@ -66,29 +71,50 @@ export const Apis = {
 
     return data;
   },
+  getAllPromocodeIndex: async (page) => {
+    const { data } = await Promocode.get(`/All?PageIndex=${page}`);
+
+    return data;
+  },
   getAllPromocodeCount: async () => {
     const { data } = await Promocode.get("/GetPromocodeCounts");
 
     return data;
   },
-  addRandom: async (random,count) => {
-    const { data } = await Promocode.post(`/AddRandom?count=${count}`,random);
+  getAllPromocodeCountIndex: async (page) => {
+    const { data } = await Promocode.get(
+      `/GetPromocodeCounts?PageIndex=${page}`
+    );
+
+    return data;
+  },
+  PromocodeFilterIndex: async (filter, currentPage) => {
+    const { data } = await Promocode.post(
+      `/Filter?PageIndex=${currentPage}`,
+      filter
+    );
+
+    return data;
+  },
+
+  addRandom: async (random, count) => {
+    const { data } = await Promocode.post(`/AddRandom?count=${count}`, random);
     return data;
   },
   getExcelPromocodes: async (id) => {
-    const { data } = await Promocode.get(`/GetExcelPromocodes?id=${id}`,
-    {  responseType: 'blob'
-  }
-  
-    );
+    const { data } = await Promocode.get(`/GetExcelPromocodes?id=${id}`, {
+      responseType: "blob",
+    });
     return data;
   },
   getExcelReport: async (report) => {
-    const { data } = await Promocode.post("/GetExcelReport",report,{responseType: 'blob'});
+    const { data } = await Promocode.post("/GetExcelReport", report, {
+      responseType: "blob",
+    });
     return data;
   },
   addCostum: async (custom) => {
-    const { data } = await Promocode.post("/AddCustom",custom);
+    const { data } = await Promocode.post("/AddCustom", custom);
     return data;
   },
   activatePromocode: async () => {
@@ -100,7 +126,7 @@ export const Apis = {
     return data;
   },
   register: async (register) => {
-    const { data } = await Logins.post("/Register",register);
+    const { data } = await Logins.post("/Register", register);
     return data;
   },
   filter: async (filter) => {
@@ -111,13 +137,23 @@ export const Apis = {
     const { data } = await Logins.post("/Login", login);
     return data;
   },
-  getPromocodesByMerchant:async (merchant) => {
-    const { data } = await Promocode.post("/GetPromocodesByMerchant",merchant);
+  getPromocodesByMerchant: async (merchant) => {
+    const { data } = await Promocode.post("/GetPromocodesByMerchant", merchant);
+
+    return data;
+  },
+  getPromocodesByMerchantIndex: async (merchant, page) => {
+    const { data } = await Promocode.post(
+      `GetPromocodesByMerchant?PageIndex=${page}`,
+      merchant
+    );
 
     return data;
   },
   getExcelReportByMerchant: async (report) => {
-    const { data } = await Promocode.post("/GetExcelReportByMerchant",report,{responseType: 'blob'});
+    const { data } = await Promocode.post("/GetExcelReportByMerchant", report, {
+      responseType: "blob",
+    });
     return data;
   },
   getSearch: async (search) => {
