@@ -54,7 +54,7 @@ export const Apis = {
     return data;
   },
   getAllMerchantIndex: async (page) => {
-    const { data } = await Merchant.get(`/All?PageIndex=${page}`);
+    const { data } = await Merchant.get(`/Pagination?PageIndex=${page}`);
 
     return data;
   },
