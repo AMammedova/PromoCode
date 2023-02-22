@@ -57,8 +57,9 @@ const Reports = () => {
       const arr = [];
       try {
         const res = await Apis.getAllMerchant().then((response) => {
+          console.log(response,"merchantresponse")
           setLoading(false);
-          response?.data?.items.map((item) => {
+          response?.data?.map((item) => {
             return arr.push({
               value: item.id,
               label: item.merchantName,

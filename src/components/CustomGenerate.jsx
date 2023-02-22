@@ -31,7 +31,7 @@ const CustomGenerate = () => {
   const arr=[];
   try{
     const res= await Apis.getAllMerchant().then((response)=>{setData(response?.data);setLoading(false);
-      response?.data?.items.map((item)=>{
+      response?.data?.map((item)=>{
  
         return  arr.push({value:item.merchantName,label:item.merchantName});
       })

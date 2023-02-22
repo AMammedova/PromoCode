@@ -21,7 +21,7 @@ useEffect(()=>{
   setLoading(true);
   
   try{
-    const res= Apis.getAllMerchant().then((response)=>{setFilteredData(response?.data);setTotalPages(response?.data?.totalPages);setLoading(false);});
+    const res= Apis.getAllMerchantIndex().then((response)=>{setFilteredData(response?.data);setTotalPages(response?.data?.totalPages);setLoading(false);});
 
   }catch(err){
     console.log(err)
